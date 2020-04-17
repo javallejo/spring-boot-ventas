@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 
@@ -30,24 +31,30 @@ public class Usuario implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UsuarioIdGenerator")	
 	@SequenceGenerator(name = "UsuarioIdGenerator", sequenceName = "usuario_pk_seq", allocationSize = 1)	
 	private Long id;
-	@Column(unique=true)
+	@Column
 	@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ ]+", message="El nombre solo puede contener letras en español") 
+	@NotBlank
 	private String nombre;
-	@Column(unique=true)
+	@Column
 	@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ ]+", message="El apellido solo puede contener letras en español") 
+	@NotBlank
 	private String apellido;
 	@Column(unique=true)
 	@Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message="Ingrese un correo válido") 
+	@NotBlank
 	private String correo;
 	@Column(unique=true)
 	@Pattern(regexp = "[A-Za-z]+", message="El nombre de usuario no debe llevar acentos, eñes ni espacios") 
+	@NotBlank
 	private String nombreusuario;
-	@Column(unique=true)
-	@Pattern(regexp = "((?=.*[a-z])(?=.*d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})", message="La contraseña debe tener al menos una mayúscula, una minúscula, un número, un caracter especial (@#$%) y tener entre 6 a 16 caracteres") 
+	@Column
+	/*@Pattern(regexp = "((?=.*[a-z])(?=.*d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})", message="La contraseña debe tener al menos una mayúscula, una minúscula, un número, un caracter especial (@#$%) y tener entre 6 a 16 caracteres")*/ 
+	@NotBlank
 	private String contrasena;
 
 	@Transient
-	@Pattern(regexp = "((?=.*[a-z])(?=.*d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})", message="La contraseña debe tener al menos una mayúscula, una minúscula, un número, un caracter especial (@#$%) y tener entre 6 a 16 caracteres") 
+	/*@Pattern(regexp = "((?=.*[a-z])(?=.*d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})", message="La contraseña debe tener al menos una mayúscula, una minúscula, un número, un caracter especial (@#$%) y tener entre 6 a 16 caracteres")*/ 
+	@NotBlank
 	private String confirmarcontrasena;
 	
 	@ManyToMany(fetch = FetchType.LAZY)

@@ -1,9 +1,15 @@
 package com.cuasatar.ventas.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.repository.RolesRepository;
@@ -26,12 +32,42 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/userForm")
-	public String userForm(Model model) {
-		
+	public String userForm(Model model) {		
 		model.addAttribute("usuarioFormulario", new Usuario());
 		model.addAttribute("usuarioLista",usuarioService.getAllUsers());
 		model.addAttribute("roles",rolesRepository.findAll());
 		model.addAttribute("listTab","active");
+		return "user-form/user-view";
+	}
+	
+	@PostMapping("/userForm")
+	public String createUser(@Valid @ModelAttribute("usuarioFormulario")Usuario user, BindingResult result, ModelMap model) {
+		if(result.hasErrors()) {			
+			model.addAttribute("usuarioFormulario", user);
+			model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+			model.addAttribute("roles",rolesRepository.findAll());
+			model.addAttribute("formTab","active");
+			
+		}
+		else {
+			try {
+				usuarioService.createUser(user);
+				model.addAttribute("usuarioFormulario", new Usuario());
+				model.addAttribute("listTab","active");
+				model.addAttribute("successMessage","Usuario creado correctamente");
+				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+				model.addAttribute("roles",rolesRepository.findAll());
+				
+			} catch (Exception e) {
+				model.addAttribute("formErrorMessage",e.getMessage());
+				model.addAttribute("usuarioFormulario", user);
+				model.addAttribute("formTab","active");
+				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+				model.addAttribute("roles",rolesRepository.findAll());
+			}
+			
+		}
+		
 		return "user-form/user-view";
 	}
 }
