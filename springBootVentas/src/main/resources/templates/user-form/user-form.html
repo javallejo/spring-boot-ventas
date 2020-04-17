@@ -1,38 +1,47 @@
-<form class="form" role="form" autocomplete="off">
+<form class="form" role="form" autocomplete="off" th:object="${usuarioFormulario}">
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Nombre</label>
 		<div class="col-lg-9">
-			<input class="form-control" type="text" >
+			<input class="form-control" type="text" th:field="${usuarioFormulario.nombre}">
 		</div>
 	</div>
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Apellido</label>
 		<div class="col-lg-9">
-			<input class="form-control" type="text" >
+			<input class="form-control" type="text" th:field="${usuarioFormulario.apellido}" >
 		</div>
 	</div>
 	<div class="form-group row">
-		<label class="col-lg-3 col-form-label form-control-label">Correo</label>
+		<label class="col-lg-3 col-form-label form-control-label" >Correo</label>
 		<div class="col-lg-9">
-			<input class="form-control" type="email">
+			<input class="form-control" type="email" th:field="${usuarioFormulario.correo}">
 		</div>
 	</div>
 	<div class="form-group row">
-		<label class="col-lg-3 col-form-label form-control-label">Nombre usuario</label>
+		<label class="col-lg-3 col-form-label form-control-label" >Nombre usuario</label>
 		<div class="col-lg-9">
-			<input class="form-control" type="text">
+			<input class="form-control" type="text" th:field="${usuarioFormulario.nombreusuario}">
 		</div>
 	</div>
 	<div class="form-group row">
-		<label class="col-lg-3 col-form-label form-control-label">Contraseña</label>
+		<label th:text="Roles" class="col-lg-3 col-form-label form-control-label"></label>
 		<div class="col-lg-9">
-			<input class="form-control" type="password">
+			<select class="form-control" size="3" th:field="${usuarioFormulario.roles}">
+				<option th:each="rol :${roles}" th:value="${rol.id}" th:text="${rol.nombre}">
+				</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group row">
+		<label class="col-lg-3 col-form-label form-control-label" >Contraseña</label>
+		<div class="col-lg-9">
+			<input class="form-control" type="password" th:field="${usuarioFormulario.contrasena}">
 		</div>
 	</div>
 	<div class="form-group row">
 		<label class="col-lg-3 col-form-label form-control-label">Confirmar contraseña</label>
 		<div class="col-lg-9">
-			<input class="form-control" type="password" >
+			<input class="form-control" type="password" th:field="${usuarioFormulario.confirmarcontrasena}">
 		</div>
 	</div>
 	<div class="form-group row">
