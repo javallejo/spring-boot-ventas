@@ -22,7 +22,7 @@ import javax.validation.constraints.Pattern;
 public class Usuario implements Serializable{
 
 	/**
-	 * 
+	 * comentario
 	 */
 	private static final long serialVersionUID = -821187118344256214L;
 

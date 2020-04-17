@@ -14,6 +14,7 @@ public class Roles implements Serializable{
 	
 	/**
 	 * 
+	 * comentario
 	 */
 	private static final long serialVersionUID = -5389057634201266991L;
 
