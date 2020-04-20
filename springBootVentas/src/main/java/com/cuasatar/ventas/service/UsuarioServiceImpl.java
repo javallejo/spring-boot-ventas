@@ -82,4 +82,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 		return user;
 	}
 
+	@Override
+	public void deleteUser(Long id) throws Exception {
+		// TODO Auto-generated method stub
+		Usuario user = usuarioRepository.findById(id)
+			/*	.orElseThrow(() -> new Exception("Usuario no hallado para eliminar"+this.getClass().getName()));*/
+				.orElseThrow(() -> new Exception("Usuario no hallado para eliminar"));
+		usuarioRepository.deleteById(id);
+	}
+
 }

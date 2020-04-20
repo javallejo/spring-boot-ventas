@@ -74,13 +74,25 @@ public class UsuarioController {
 	
 	@GetMapping("/editUser/{id}")
 	public String getEditUserForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
-		Usuario userToEdit =usuarioService.getUserById(id);
-
-		model.addAttribute("usuarioFormulario", userToEdit);
-		model.addAttribute("usuarioLista", usuarioService.getAllUsers());
-		model.addAttribute("roles",rolesRepository.findAll());
-		model.addAttribute("formTab","active");
-		model.addAttribute("editMode","true");
+		
+		try {
+			Usuario userToEdit =usuarioService.getUserById(id);
+			model.addAttribute("usuarioFormulario", userToEdit);
+			model.addAttribute("usuarioLista", usuarioService.getAllUsers());
+			model.addAttribute("roles",rolesRepository.findAll());
+			model.addAttribute("formTab","active");
+			model.addAttribute("editMode","true");
+		}
+		catch (Exception e) {
+			model.addAttribute("listErrorMessage",e.getMessage());
+			model.addAttribute("usuarioFormulario", new Usuario());
+			model.addAttribute("listTab","active");
+			model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+			model.addAttribute("roles",rolesRepository.findAll());
+			/*return "redirect:/userForm";*/
+		}
+		
+		
 
 		return "user-form/user-view";
 	}
@@ -115,6 +127,17 @@ public class UsuarioController {
 	
 	@GetMapping("/userForm/cancel")
 	public String cancelEditUser(ModelMap model) {
+		return "redirect:/userForm";
+	}
+	
+	@GetMapping("/deleteUser/{id}")
+	public String deleteUser(Model model, @PathVariable(name="id") Long id) {
+		try {
+			usuarioService.deleteUser(id);
+		} catch (Exception e) {
+			model.addAttribute("deleteError","El usuario no pudo ser eliminado.");
+		}
+		/*return userForm(model);*/
 		return "redirect:/userForm";
 	}
 }

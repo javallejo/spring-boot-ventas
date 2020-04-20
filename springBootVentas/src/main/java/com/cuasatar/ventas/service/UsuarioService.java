@@ -8,5 +8,6 @@ public interface UsuarioService {
 	public Usuario createUser(Usuario user) throws Exception;
 	public Usuario getUserById(Long id) throws Exception;
 	public Usuario updateUser(Usuario user) throws Exception;
+	public void deleteUser(Long id) throws Exception;
 	
 }
