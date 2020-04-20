@@ -54,7 +54,7 @@ public class Usuario implements Serializable{
 
 	@Transient
 	/*@Pattern(regexp = "((?=.*[a-z])(?=.*d)(?=.*[@#$%])(?=.*[A-Z]).{6,16})", message="La contraseña debe tener al menos una mayúscula, una minúscula, un número, un caracter especial (@#$%) y tener entre 6 a 16 caracteres")*/ 
-	@NotBlank
+	/*@NotBlank*/
 	private String confirmarcontrasena;
 	
 	@ManyToMany(fetch = FetchType.LAZY)

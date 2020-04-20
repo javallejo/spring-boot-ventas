@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cuasatar.ventas.entity.Usuario;
@@ -69,5 +70,51 @@ public class UsuarioController {
 		}
 		
 		return "user-form/user-view";
+	}
+	
+	@GetMapping("/editUser/{id}")
+	public String getEditUserForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
+		Usuario userToEdit =usuarioService.getUserById(id);
+
+		model.addAttribute("usuarioFormulario", userToEdit);
+		model.addAttribute("usuarioLista", usuarioService.getAllUsers());
+		model.addAttribute("roles",rolesRepository.findAll());
+		model.addAttribute("formTab","active");
+		model.addAttribute("editMode","true");
+
+		return "user-form/user-view";
+	}
+	
+	@PostMapping("/editUser")
+	public String postEditUserForm(@Valid @ModelAttribute("usuarioFormulario")Usuario user, BindingResult result, ModelMap model) {
+		if(result.hasErrors()) {
+			model.addAttribute("usuarioFormulario",user);
+			model.addAttribute("formTab","active");
+			model.addAttribute("editMode","true");
+		}else {
+			try {
+				usuarioService.updateUser(user);
+				model.addAttribute("usuarioFormulario", new Usuario());
+				model.addAttribute("successMessage","Usuario actualizado correctamente");
+				model.addAttribute("listTab","active");
+			} catch (Exception e) {
+				model.addAttribute("formErrorMessage",e.getMessage());
+				model.addAttribute("usuarioFormulariom", user);
+				model.addAttribute("formTab","active");
+				model.addAttribute("usuarioLista", usuarioService.getAllUsers());
+				model.addAttribute("roles",rolesRepository.findAll());
+				model.addAttribute("editMode","true");
+			}
+		}
+
+		model.addAttribute("usuarioLista", usuarioService.getAllUsers());
+		model.addAttribute("roles",rolesRepository.findAll());
+		return "user-form/user-view";
+
+	}
+	
+	@GetMapping("/userForm/cancel")
+	public String cancelEditUser(ModelMap model) {
+		return "redirect:/userForm";
 	}
 }

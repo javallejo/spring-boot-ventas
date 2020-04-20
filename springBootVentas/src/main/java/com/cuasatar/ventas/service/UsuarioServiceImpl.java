@@ -38,10 +38,38 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 
 	private boolean checkPasswordValid(Usuario user) throws Exception {
+		if (user.getConfirmarcontrasena() == null || user.getConfirmarcontrasena().isEmpty()) {
+			throw new Exception("Confirmar contraseña es obligatorio");
+		}
+		
 		if ( !user.getContrasena().equals(user.getConfirmarcontrasena())) {
 			throw new Exception("Contraseña y confirmar contraseña no son iguales");
 		}
 		return true;
+	}
+	
+	@Override
+	public Usuario getUserById(Long id) throws Exception {
+		return usuarioRepository.findById(id).orElseThrow(() -> new Exception("El usuario para editar no existe."));
+	}
+	@Override
+	public Usuario updateUser(Usuario fromUser) throws Exception {
+		Usuario toUser = getUserById(fromUser.getId());
+		mapUser(fromUser, toUser);
+		return usuarioRepository.save(toUser);
+	}
+	
+	/**
+	 * Map everythin but the password.
+	 * @param from
+	 * @param to
+	 */
+	protected void mapUser(Usuario from,Usuario to) {
+		to.setNombreusuario(from.getNombreusuario());
+		to.setNombre(from.getNombre());
+		to.setApellido(from.getApellido());
+		to.setCorreo(from.getCorreo());
+		to.setRoles(from.getRoles());
 	}
 	
 
