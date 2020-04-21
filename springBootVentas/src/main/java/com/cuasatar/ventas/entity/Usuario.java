@@ -63,6 +63,8 @@ public class Usuario implements Serializable{
 			inverseJoinColumns=@JoinColumn(name="rol_id"))
 	private Set<Roles> roles;
 
+
+
 	public Long getId() {
 		return id;
 	}
