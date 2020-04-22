@@ -1,11 +1,16 @@
 package com.cuasatar.ventas.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +23,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.cuasatar.ventas.IAuthenticationFacade;
 import com.cuasatar.ventas.dto.ChangePasswordForm;
+import com.cuasatar.ventas.entity.Roles;
 import com.cuasatar.ventas.entity.Usuario;
+import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.RolesRepository;
 import com.cuasatar.ventas.service.UsuarioService;
 
@@ -33,6 +41,22 @@ public class UsuarioController {
 	@Autowired
 	RolesRepository rolesRepository;
 	
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
+	
+	Usuario miUsuarioComprobacion = null;
+	Set<Roles> setRoles = null;
+	
+	List list = null;
+	Roles myRol=null;
+	String tipoRol="";
+	Long idUsuario=null;
+	List<Long> idUser = new ArrayList<>();
+	Iterable<Long> idUserIt=null;
+	
+
+	
+	
 	
 	@GetMapping({"/","/login"})
 	public String index() {
@@ -40,11 +64,26 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/userForm")
-	public String userForm(Model model) {		
-		model.addAttribute("usuarioFormulario", new Usuario());
-		model.addAttribute("usuarioLista",usuarioService.getAllUsers());
-		model.addAttribute("roles",rolesRepository.findAll());
-		model.addAttribute("listTab","active");
+	public String userForm(Model model){	
+		
+		try {
+			getIdAndRoleUserLogged();
+			
+			/*System.out.println("ids de listado->"+usuarioService.getListIdUserRole());*/
+			model.addAttribute("usuarioFormulario", new Usuario());
+			if(tipoRol.equals("ROLE_USER")) {
+				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+			}
+			else {
+				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+			}				
+			model.addAttribute("roles",rolesRepository.findAll());
+			model.addAttribute("listTab","active");								
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+
 		return "user-form/user-view";
 	}
 	
@@ -54,31 +93,62 @@ public class UsuarioController {
 		String nuevaContrasenaConfirm="";
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
 		
-		if(result.hasErrors()) {			
-			model.addAttribute("usuarioFormulario", user);
-			model.addAttribute("usuarioLista",usuarioService.getAllUsers());
-			model.addAttribute("roles",rolesRepository.findAll());
-			model.addAttribute("formTab","active");
+		try {
 			
-		}
-		else {
-			try {			
-				usuarioService.createUser(user);
-				model.addAttribute("usuarioFormulario", new Usuario());
-				model.addAttribute("listTab","active");
-				model.addAttribute("successMessage","Usuario creado correctamente");
-				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
-				model.addAttribute("roles",rolesRepository.findAll());
-				
-			} catch (Exception e) {
-				model.addAttribute("formErrorMessage",e.getMessage());
+			getIdAndRoleUserLogged();
+			
+			
+			
+
+			
+			if(result.hasErrors()) {			
 				model.addAttribute("usuarioFormulario", user);
-				model.addAttribute("formTab","active");
-				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+				if(tipoRol.equals("ROLE_USER")) {
+					model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+				}
+				else {
+					model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+				}
 				model.addAttribute("roles",rolesRepository.findAll());
+				model.addAttribute("formTab","active");
+				
 			}
-			
+			else {
+				try {			
+					usuarioService.createUser(user);
+					model.addAttribute("usuarioFormulario", new Usuario());
+					model.addAttribute("listTab","active");
+					model.addAttribute("successMessage","Usuario creado correctamente");
+					if(tipoRol.equals("ROLE_USER")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					}
+					else {
+						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					}
+					model.addAttribute("roles",rolesRepository.findAll());
+					
+				} catch (Exception e) {
+					model.addAttribute("formErrorMessage",e.getMessage());
+					model.addAttribute("usuarioFormulario", user);
+					model.addAttribute("formTab","active");
+					if(tipoRol.equals("ROLE_USER")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					}
+					else {
+						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					}
+					model.addAttribute("roles",rolesRepository.findAll());
+				}
+				
+			}
 		}
+		
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+
 		
 		return "user-form/user-view";
 	}
@@ -86,55 +156,102 @@ public class UsuarioController {
 	@GetMapping("/editUser/{id}")
 	public String getEditUserForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
 		
+		
 		try {
-			Usuario userToEdit =usuarioService.getUserById(id);
-			model.addAttribute("usuarioFormulario", userToEdit);
-			model.addAttribute("usuarioLista", usuarioService.getAllUsers());
-			model.addAttribute("roles",rolesRepository.findAll());
-			model.addAttribute("formTab","active");
-			model.addAttribute("editMode","true");
-			model.addAttribute("passwordForm",new ChangePasswordForm(userToEdit.getId()));
+			getIdAndRoleUserLogged();
+			
+			if(tipoRol.equals("ROLE_USER") && idUsuario!=id ) {/*Esta tratando de editar un usuario que no le corresponde*/
+				return "redirect:/userForm";
+			}
+			else {
+				try {
+					Usuario userToEdit =usuarioService.getUserById(id);
+					model.addAttribute("usuarioFormulario", userToEdit);
+					if(tipoRol.equals("ROLE_USER")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					}
+					else {
+						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					}
+					model.addAttribute("roles",rolesRepository.findAll());
+					model.addAttribute("formTab","active");
+					model.addAttribute("editMode","true");
+					model.addAttribute("passwordForm",new ChangePasswordForm(userToEdit.getId()));
+				}
+				catch (Exception e) {
+					model.addAttribute("listErrorMessage",e.getMessage());
+					model.addAttribute("usuarioFormulario", new Usuario());
+					model.addAttribute("listTab","active");
+					if(tipoRol.equals("ROLE_USER")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					}
+					else {
+						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					}
+					model.addAttribute("roles",rolesRepository.findAll());
+					/*return "redirect:/userForm";*/
+				}
+			}
+			
+			
+			
+			
 		}
 		catch (Exception e) {
-			model.addAttribute("listErrorMessage",e.getMessage());
-			model.addAttribute("usuarioFormulario", new Usuario());
-			model.addAttribute("listTab","active");
-			model.addAttribute("usuarioLista",usuarioService.getAllUsers());
-			model.addAttribute("roles",rolesRepository.findAll());
-			/*return "redirect:/userForm";*/
-		}
-		
-		
-
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+							
 		return "user-form/user-view";
 	}
 	
 	@PostMapping("/editUser")
 	public String postEditUserForm(@Valid @ModelAttribute("usuarioFormulario")Usuario user, BindingResult result, ModelMap model) {
-		if(result.hasErrors()) {
-			model.addAttribute("usuarioFormulario",user);
-			model.addAttribute("formTab","active");
-			model.addAttribute("editMode","true");
-			model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
-		}else {
-			try {
-				usuarioService.updateUser(user);
-				model.addAttribute("usuarioFormulario", new Usuario());
-				model.addAttribute("successMessage","Usuario actualizado correctamente");
-				model.addAttribute("listTab","active");
-			} catch (Exception e) {
-				model.addAttribute("formErrorMessage",e.getMessage());
-				model.addAttribute("usuarioFormulariom", user);
+		
+		try {
+			getIdAndRoleUserLogged();
+			if(result.hasErrors()) {
+				model.addAttribute("usuarioFormulario",user);
 				model.addAttribute("formTab","active");
-				model.addAttribute("usuarioLista", usuarioService.getAllUsers());
-				model.addAttribute("roles",rolesRepository.findAll());
 				model.addAttribute("editMode","true");
 				model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
+			}else {
+				try {
+					usuarioService.updateUser(user);
+					model.addAttribute("usuarioFormulario", new Usuario());
+					model.addAttribute("successMessage","Usuario actualizado correctamente");
+					model.addAttribute("listTab","active");
+				} catch (Exception e) {
+					model.addAttribute("formErrorMessage",e.getMessage());
+					model.addAttribute("usuarioFormulariom", user);
+					model.addAttribute("formTab","active");
+					if(tipoRol.equals("ROLE_USER")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					}
+					else {
+						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					}
+					model.addAttribute("roles",rolesRepository.findAll());
+					model.addAttribute("editMode","true");
+					model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
+				}
 			}
-		}
 
-		model.addAttribute("usuarioLista", usuarioService.getAllUsers());
-		model.addAttribute("roles",rolesRepository.findAll());
+			if(tipoRol.equals("ROLE_USER")) {
+				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+			}
+			else {
+				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+			}
+			model.addAttribute("roles",rolesRepository.findAll());
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		
+		
 		return "user-form/user-view";
 
 	}
@@ -148,11 +265,11 @@ public class UsuarioController {
 	public String deleteUser(Model model, @PathVariable(name="id") Long id) {
 		try {
 			usuarioService.deleteUser(id);
-		} catch (Exception e) {
-			model.addAttribute("deleteError","El usuario no pudo ser eliminado.");
+		} catch (UsernameOrIdNotFound uoin) {
+			model.addAttribute("deleteError",uoin.getMessage());
 		}
-		/*return userForm(model);*/
-		return "redirect:/userForm";
+		return userForm(model);
+		/*return "redirect:/userForm";*/
 	}
 	
 	@PostMapping("/editUser/changePassword")
@@ -172,4 +289,22 @@ public class UsuarioController {
 		}
 		return ResponseEntity.ok("success");
 	}
+	
+	public void getIdAndRoleUserLogged() throws Exception {
+		
+		miUsuarioComprobacion = authenticationFacade.getLoggedUsuario();
+		setRoles = miUsuarioComprobacion.getRoles();
+		
+		list = Arrays.asList(setRoles.toArray());
+		myRol=(Roles) list.get(0);
+		tipoRol=myRol.getDescripcion();	
+		idUsuario=(Long)miUsuarioComprobacion.getId();
+		idUser.add(idUsuario);
+		idUserIt=(Iterable<Long>) idUser;
+		
+
+		
+	}
+	
+	
 }

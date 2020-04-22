@@ -1,5 +1,6 @@
 package com.cuasatar.ventas.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.cuasatar.ventas.dto.ChangePasswordForm;
 import com.cuasatar.ventas.entity.Usuario;
+import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.UsuarioRepository;
 
 
@@ -63,8 +65,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
-	public Usuario getUserById(Long id) throws Exception {
-		return usuarioRepository.findById(id).orElseThrow(() -> new Exception("El usuario para editar no existe."));
+	public Usuario getUserById(Long id) throws UsernameOrIdNotFound {
+		return usuarioRepository.findById(id).orElseThrow(() -> new UsernameOrIdNotFound("El Id del usuario no existe."));
 	}
 	@Override
 	public Usuario updateUser(Usuario fromUser) throws Exception {
@@ -107,7 +109,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	@Override
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-	public void deleteUser(Long id) throws Exception {
+	public void deleteUser(Long id) throws UsernameOrIdNotFound {
 		Usuario user = getUserById(id);
 		usuarioRepository.delete(user);
 	}
@@ -158,7 +160,42 @@ public class UsuarioServiceImpl implements UsuarioService {
 			}
 			return roles != null ?true :false;
 		}
-	
+		
+		
+		
+		private Usuario getLoggedUsuario() throws Exception {
+			//Obtener el usuario logeado
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
+			UserDetails loggedUser = null;
+
+			//Verificar que ese objeto traido de sesion es el usuario
+			if (principal instanceof UserDetails) {
+				loggedUser = (UserDetails) principal;
+			}
+			
+			Usuario myUser = usuarioRepository
+					.findByNombreusuario(loggedUser.getUsername()).orElseThrow(() -> new Exception("Error obteniendo el usuario logeado desde la sesion."));
+			
+			return myUser;
+		}
+
+		@Override
+		public Iterable<Usuario> getUserListById(Iterable<Long> id) {
+			// TODO Auto-generated method stub
+			return usuarioRepository.findAllById(id);		
+		}
+        /*
+		@Override
+		public List<Usuario> getListIdUserRole() throws Exception {
+			// TODO Auto-generated method stub
+			return usuarioRepository.fetchUsuarioRolesUserInnerJoin();
+		}
+		*/
+		
+
+		
+		
 	
 
 	
