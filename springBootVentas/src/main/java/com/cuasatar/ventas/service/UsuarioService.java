@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 
 import com.cuasatar.ventas.dto.ChangePasswordForm;
+import com.cuasatar.ventas.dto.UsuarioRolesDTO;
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 
@@ -18,7 +19,7 @@ public interface UsuarioService {
 	public Usuario changePassword(ChangePasswordForm form) throws Exception;
 	public Iterable<Usuario> getUserListById(Iterable<Long> id);
 
-	/*public List<Usuario> getListIdUserRole() throws Exception;*/
+	public List<UsuarioRolesDTO> fetchUsuarioRolesUserInnerJoin() throws Exception;
 
 	
 }

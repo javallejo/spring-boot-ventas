@@ -3,6 +3,7 @@ package com.cuasatar.ventas.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.cuasatar.ventas.IAuthenticationFacade;
 import com.cuasatar.ventas.dto.ChangePasswordForm;
+import com.cuasatar.ventas.dto.UsuarioRolesDTO;
 import com.cuasatar.ventas.entity.Roles;
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.RolesRepository;
+import com.cuasatar.ventas.service.RoleService;
 import com.cuasatar.ventas.service.UsuarioService;
 
 
@@ -37,6 +40,10 @@ public class UsuarioController {
 
 	@Autowired
 	UsuarioService usuarioService;
+	
+	
+	@Autowired
+	RoleService rolesService;
 	
 	@Autowired
 	RolesRepository rolesRepository;
@@ -47,6 +54,8 @@ public class UsuarioController {
 	Usuario miUsuarioComprobacion = null;
 	Set<Roles> setRoles = null;
 	
+	
+	/*Obtener lista cuando itera solamente el usuario*/
 	List list = null;
 	Roles myRol=null;
 	String tipoRol="";
@@ -54,7 +63,13 @@ public class UsuarioController {
 	List<Long> idUser = new ArrayList<>();
 	Iterable<Long> idUserIt=null;
 	
-
+	
+	
+	
+	/*Obtener lista cuando itera solamente el supervisor*/
+	List<UsuarioRolesDTO> listaUsuariosSupervisor=null;
+	List<Long> idUserSupervisor = new ArrayList<>();
+	Iterable<Long> idUserSupervisorIt=null;
 	
 	
 	
@@ -69,15 +84,24 @@ public class UsuarioController {
 		try {
 			getIdAndRoleUserLogged();
 			
-			/*System.out.println("ids de listado->"+usuarioService.getListIdUserRole());*/
+			/**/
+
 			model.addAttribute("usuarioFormulario", new Usuario());
 			if(tipoRol.equals("ROLE_USER")) {
 				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+				model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+			}
+			else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+				model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 			}
 			else {
 				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
-			}				
-			model.addAttribute("roles",rolesRepository.findAll());
+				model.addAttribute("roles",rolesRepository.findAll());
+			}
+			 
+			
+            /*model.addAttribute("roles",rolesRepository.findAll());*/
 			model.addAttribute("listTab","active");								
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -95,21 +119,25 @@ public class UsuarioController {
 		
 		try {
 			
-			getIdAndRoleUserLogged();
-			
-			
-			
-
+			getIdAndRoleUserLogged();							
 			
 			if(result.hasErrors()) {			
 				model.addAttribute("usuarioFormulario", user);
 				if(tipoRol.equals("ROLE_USER")) {
 					model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+					model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+				}
+				else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+					model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+					model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 				}
 				else {
 					model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+					model.addAttribute("roles",rolesRepository.findAll());
 				}
-				model.addAttribute("roles",rolesRepository.findAll());
+				 
+				
+	            /*model.addAttribute("roles",rolesRepository.findAll());*/
 				model.addAttribute("formTab","active");
 				
 			}
@@ -121,11 +149,19 @@ public class UsuarioController {
 					model.addAttribute("successMessage","Usuario creado correctamente");
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+					}
+					else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 					}
 					else {
 						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+						model.addAttribute("roles",rolesRepository.findAll());
 					}
-					model.addAttribute("roles",rolesRepository.findAll());
+					 
+					
+		            /*model.addAttribute("roles",rolesRepository.findAll());*/
 					
 				} catch (Exception e) {
 					model.addAttribute("formErrorMessage",e.getMessage());
@@ -133,11 +169,19 @@ public class UsuarioController {
 					model.addAttribute("formTab","active");
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+					}
+					else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 					}
 					else {
 						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+						model.addAttribute("roles",rolesRepository.findAll());
 					}
-					model.addAttribute("roles",rolesRepository.findAll());
+					 
+					
+		            /*model.addAttribute("roles",rolesRepository.findAll());*/
 				}
 				
 			}
@@ -169,11 +213,19 @@ public class UsuarioController {
 					model.addAttribute("usuarioFormulario", userToEdit);
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+					}
+					else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 					}
 					else {
 						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+						model.addAttribute("roles",rolesRepository.findAll());
 					}
-					model.addAttribute("roles",rolesRepository.findAll());
+					 
+					
+		            /*model.addAttribute("roles",rolesRepository.findAll());*/
 					model.addAttribute("formTab","active");
 					model.addAttribute("editMode","true");
 					model.addAttribute("passwordForm",new ChangePasswordForm(userToEdit.getId()));
@@ -184,11 +236,19 @@ public class UsuarioController {
 					model.addAttribute("listTab","active");
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+					}
+					else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 					}
 					else {
 						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+						model.addAttribute("roles",rolesRepository.findAll());
 					}
-					model.addAttribute("roles",rolesRepository.findAll());
+					 
+					
+		            /*model.addAttribute("roles",rolesRepository.findAll());*/
 					/*return "redirect:/userForm";*/
 				}
 			}
@@ -227,11 +287,19 @@ public class UsuarioController {
 					model.addAttribute("formTab","active");
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+					}
+					else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+						model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 					}
 					else {
 						model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+						model.addAttribute("roles",rolesRepository.findAll());
 					}
-					model.addAttribute("roles",rolesRepository.findAll());
+					 
+					
+		            /*model.addAttribute("roles",rolesRepository.findAll());*/
 					model.addAttribute("editMode","true");
 					model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
 				}
@@ -239,11 +307,19 @@ public class UsuarioController {
 
 			if(tipoRol.equals("ROLE_USER")) {
 				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));
+				model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
+			}
+			else if(tipoRol.equals("ROLE_SUPERVISOR")) {
+				model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserSupervisorIt));
+				model.addAttribute("roles",rolesRepository.findByDescripcion("ROLE_USER"));
 			}
 			else {
 				model.addAttribute("usuarioLista",usuarioService.getAllUsers());
+				model.addAttribute("roles",rolesRepository.findAll());
 			}
-			model.addAttribute("roles",rolesRepository.findAll());
+			 
+			
+            /*model.addAttribute("roles",rolesRepository.findAll());*/
 		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -298,13 +374,38 @@ public class UsuarioController {
 		list = Arrays.asList(setRoles.toArray());
 		myRol=(Roles) list.get(0);
 		tipoRol=myRol.getDescripcion();	
+		
+		
 		idUsuario=(Long)miUsuarioComprobacion.getId();
-		idUser.add(idUsuario);
-		idUserIt=(Iterable<Long>) idUser;
+		
+		
+		if(tipoRol.equals("ROLE_USER")) {
+			idUser.add(idUsuario);
+			idUserIt=(Iterable<Long>) idUser;
+		}
+		
+		if(tipoRol.equals("ROLE_SUPERVISOR")) {
+			listaUsuariosSupervisor=usuarioService.fetchUsuarioRolesUserInnerJoin();
+			
+			for (UsuarioRolesDTO ur:listaUsuariosSupervisor) {
+				idUserSupervisor.add(ur.getId());
+			}
+		idUserSupervisorIt=(Iterable<Long>) idUserSupervisor;	
+		}
+		
+		
+
+			
+		}
+		//idUserSupervisor
+		
+		//idUserSupervisorIt
+		
+		
 		
 
 		
-	}
+	
 	
 	
 }

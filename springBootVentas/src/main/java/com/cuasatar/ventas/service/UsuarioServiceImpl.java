@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cuasatar.ventas.dto.ChangePasswordForm;
+import com.cuasatar.ventas.dto.UsuarioRolesDTO;
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.UsuarioRepository;
@@ -185,13 +186,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 			// TODO Auto-generated method stub
 			return usuarioRepository.findAllById(id);		
 		}
-        /*
+        
 		@Override
-		public List<Usuario> getListIdUserRole() throws Exception {
-			// TODO Auto-generated method stub
+		public List<UsuarioRolesDTO> fetchUsuarioRolesUserInnerJoin() throws Exception {
+			// TODO() Auto-generated method stub
 			return usuarioRepository.fetchUsuarioRolesUserInnerJoin();
 		}
-		*/
+		
 		
 
 		
