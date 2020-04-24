@@ -27,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.cuasatar.ventas.IAuthenticationFacade;
 import com.cuasatar.ventas.dto.ChangePasswordForm;
 import com.cuasatar.ventas.dto.UsuarioRolesDTO;
+import com.cuasatar.ventas.entity.Cliente;
 import com.cuasatar.ventas.entity.Roles;
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
+import com.cuasatar.ventas.repository.EstadosRepository;
 import com.cuasatar.ventas.repository.RolesRepository;
 import com.cuasatar.ventas.service.RoleService;
 import com.cuasatar.ventas.service.UsuarioService;
@@ -48,6 +50,8 @@ public class UsuarioController {
 	@Autowired
 	RolesRepository rolesRepository;
 	
+	
+	
 	@Autowired
     private IAuthenticationFacade authenticationFacade;
 	
@@ -63,7 +67,7 @@ public class UsuarioController {
 	List<Long> idUser = new ArrayList<>();
 	Iterable<Long> idUserIt=null;
 	
-	
+
 	
 	
 	/*Obtener lista cuando itera solamente el supervisor*/
@@ -110,6 +114,9 @@ public class UsuarioController {
 
 		return "user-form/user-view";
 	}
+	
+	
+
 	
 	@PostMapping("/userForm")
 	public String createUser(@Valid @ModelAttribute("usuarioFormulario")Usuario user, BindingResult result, ModelMap model) {
@@ -400,6 +407,10 @@ public class UsuarioController {
 		//idUserSupervisor
 		
 		//idUserSupervisorIt
+	/*
+	public void getUserDetails() throws Exception {
+		miUsuarioDatos=authenticationFacade.getLoggedUsuario();
+	}*/
 		
 		
 		

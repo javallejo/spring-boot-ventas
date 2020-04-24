@@ -1,0 +1,29 @@
+<div class="alert alert-success text-center" th:if="${successMessage}" th:text="${successMessage}">Succes message</div>
+<div class="table-responsive">
+	<table id="clientList" class="table table-bordered table-hover table-striped">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Dni</th>
+			<th scope="col">Nombres</th>
+			<th scope="col">Direccion</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr th:each="cliente: ${clienteLista}">
+			<td th:text="${cliente.id}"></td>
+			<td th:text="${cliente.dni}"></td>
+			<td th:text="${cliente.nombres}"></td>
+			<td th:text="${cliente.direccion}"></td>
+			<td>
+				<span>
+				<a href="#" th:href="@{'/ventas/editClient/'+ ${cliente.id}}"><i class="fas fa-edit"></i></a>
+					
+					|	<a href="#" th:onclick="'javascript:confirmDelete(\''+ ${cliente.id} +'\');'"><i class="fas fa-user-times"></i></a>
+					</span>
+			</td>
+	</tr>
+	</tbody>
+	</table>
+</div>
