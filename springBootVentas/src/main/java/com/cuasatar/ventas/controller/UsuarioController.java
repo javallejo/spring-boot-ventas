@@ -120,9 +120,7 @@ public class UsuarioController {
 	
 	@PostMapping("/userForm")
 	public String createUser(@Valid @ModelAttribute("usuarioFormulario")Usuario user, BindingResult result, ModelMap model) {
-		String nuevaContrasena="";
-		String nuevaContrasenaConfirm="";
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
+
 		
 		try {
 			
@@ -290,7 +288,7 @@ public class UsuarioController {
 					model.addAttribute("listTab","active");
 				} catch (Exception e) {
 					model.addAttribute("formErrorMessage",e.getMessage());
-					model.addAttribute("usuarioFormulariom", user);
+					model.addAttribute("usuarioFormulario", user);
 					model.addAttribute("formTab","active");
 					if(tipoRol.equals("ROLE_USER")) {
 						model.addAttribute("usuarioLista",usuarioService.getUserListById(idUserIt));

@@ -183,7 +183,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		@Override
 		public Iterable<Usuario> getUserListById(Iterable<Long> id) {
-			// TODO Auto-generated method stub
+
 			return usuarioRepository.findAllById(id);		
 		}
         

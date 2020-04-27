@@ -20,10 +20,27 @@
 				<span>
 				<a href="#" th:href="@{'/ventas/editClient/'+ ${cliente.id}}"><i class="fas fa-edit"></i></a>
 					
-					|	<a href="#" th:onclick="'javascript:confirmDelete(\''+ ${cliente.id} +'\');'"><i class="fas fa-user-times"></i></a>
+					|	<a href="#" th:onclick="'javascript:confirmDeleteClient(\''+ ${cliente.id} +'\');'"><i class="fas fa-user-times"></i></a>
 					</span>
 			</td>
 	</tr>
 	</tbody>
 	</table>
+	
+	<div id="deleteClientError" th:if="${deleteClientError}" class="alert alert-danger text-center" role="alert">
+		<span th:text="${deleteClientError}"></span>
+	</div>
+	
+		<script type="text/javascript">
+		function confirmDeleteClient(id){
+			$('#deleteClientModal').modal('show');
+			$("#clientIdHiddenInput").val(id);
+		}
+		
+		function deleteClient(){
+			var id = $("#clientIdHiddenInput").val();
+		    window.location = "/ventas/deleteClient/"+id;
+		}
+
+</script>
 </div>

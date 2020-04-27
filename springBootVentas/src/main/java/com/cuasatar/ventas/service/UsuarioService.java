@@ -2,7 +2,7 @@ package com.cuasatar.ventas.service;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Query;
+
 
 import com.cuasatar.ventas.dto.ChangePasswordForm;
 import com.cuasatar.ventas.dto.UsuarioRolesDTO;

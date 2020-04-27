@@ -1,6 +1,10 @@
 
-<form class="form" role="form" autocomplete="off" th:object="${clienteFormulario}" th:action="@{/ventas/clientForm}" method="post">
+<form class="form" role="form" autocomplete="off" th:object="${clienteFormulario}" th:action="${editClientMode} ?@{/ventas/editClient}:@{/ventas/clientForm}" method="post">
 	<div class="form-group row">
+	
+	<!--Es necesario para poder pasar la validacion del Model-->
+	    <input class="form-control" type=hidden th:field="${clienteFormulario.id}"  th:if="${editClientMode}">
+	
 		<label class="col-lg-3 col-form-label form-control-label">Dni</label>
 		<div class="col-lg-9">
 			<input class="form-control" type="text" th:field="${clienteFormulario.dni}">
@@ -36,7 +40,7 @@
 		<div class="col-lg-12 text-center">
 			<a class="btn btn-secondary"  th:href="@{'/ventas/clientForm/cancel'}">Cancelar</a>
 			<input type="submit" class="btn btn-primary"
-				value="Guardar cliente">
+				value="Crear cliente" th:value="${editClientMode}?'Guardar cliente':'Crear cliente'">
 		</div>
 	</div>
 </form>

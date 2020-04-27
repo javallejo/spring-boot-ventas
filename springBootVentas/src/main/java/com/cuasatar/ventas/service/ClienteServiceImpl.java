@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cuasatar.ventas.entity.Cliente;
-import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.repository.ClientesRepository;
 
 
@@ -42,7 +41,7 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public Cliente updateClient(Cliente client) throws Exception {
 
-		return null;
+		return clienteRepository.save(client);
 	}
 
 	@Override

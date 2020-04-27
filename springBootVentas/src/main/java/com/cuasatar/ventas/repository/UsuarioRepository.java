@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.cuasatar.ventas.dto.UsuarioRolesDTO;
-import com.cuasatar.ventas.entity.Roles;
 import com.cuasatar.ventas.entity.Usuario;
 
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {

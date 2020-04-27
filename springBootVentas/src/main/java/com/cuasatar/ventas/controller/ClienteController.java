@@ -9,10 +9,11 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.cuasatar.ventas.entity.Cliente;
-import com.cuasatar.ventas.entity.Usuario;
+import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.EstadosRepository;
 import com.cuasatar.ventas.service.ClienteService;
 
@@ -82,10 +83,69 @@ public class ClienteController {
 		return "ventas/ventas";
 	}
 	
+	
+	@GetMapping("/ventas/editClient/{id}")
+	public String getEditClientForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
+		
+		try {
+			Cliente clientToEdit =clienteService.getClientById(id);
+			model.addAttribute("clienteFormulario", clientToEdit);
+			model.addAttribute("estado",estadosRepository.findAll());
+			model.addAttribute("editClientMode","true");
+		}
+		catch (Exception e) {
+			model.addAttribute("clienteFormulario", new Cliente());
+			model.addAttribute("formErrorClientMessage",e.getMessage());
+			model.addAttribute("editClientMode","true");	
+		}
+		
+		return  "ventas/client-view";
+	}
+	
+	@PostMapping("/ventas/editClient")
+	public String postEditClientForm(@Valid @ModelAttribute("clienteFormulario")Cliente client, BindingResult result, ModelMap model) {
+		if(result.hasErrors()) {
+			model.addAttribute("clienteFormulario", client);
+			model.addAttribute("editClientMode","true");
+		}
+		else {
+			try {
+				clienteService.updateClient(client);
+				model.addAttribute("clienteFormulario", new Cliente());
+				model.addAttribute("successClientMessage","Cliente actualizado correctamente");
+			}
+			catch (Exception e) {
+				model.addAttribute("clienteFormulario", client);
+				model.addAttribute("formErrorClientMessage",e.getMessage());
+				model.addAttribute("estado",estadosRepository.findAll());
+				model.addAttribute("editClientMode","true");
+				
+			}
+		}
+		
+		
+		return "redirect:/ventas/clientList";
+	}
+	
+	
+	@GetMapping("/ventas/deleteClient/{id}")
+	public String deleteUser(Model model, @PathVariable(name="id") Long id) {
+		try {
+			clienteService.deleteClient(id);
+		} catch (Exception e ) {
+			model.addAttribute("deleteClientError",e.getMessage());
+		}
+		/*return clientList(model);*/
+		return "redirect:/ventas/clientList";
+	}
+	
+	
 	@GetMapping("/ventas/clientForm/cancel")
 	public String cancelClient(ModelMap model) {
 		return "redirect:/ventas/clientForm";
 	}
+	
+	
 	
 
 }
