@@ -2,25 +2,27 @@ package com.cuasatar.ventas.entity;
 
 import java.io.Serializable;
 
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
+
 @Entity
-public class Estado implements Serializable{
+public class Disponible implements Serializable{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8303271557832931548L;
+	private static final long serialVersionUID = -7767656120353514184L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EstadoIdGenerator")	
-	@SequenceGenerator(name = "EstadoIdGenerator", sequenceName = "estado_pk_seq", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DisponibleIdGenerator")	
+	@SequenceGenerator(name = "DisponibleIdGenerator", sequenceName = "disponible_pk_seq", allocationSize = 1)
 	private Long id;
 
 	@Column(unique=true)
@@ -29,7 +31,10 @@ public class Estado implements Serializable{
 	@Column(unique=true)
 	private String descripcion;
 	
-
+	/*
+	@OneToOne(cascade=CascadeType.ALL)  
+    private Producto producto;  
+*/
 	public Long getId() {
 		return id;
 	}
@@ -53,6 +58,9 @@ public class Estado implements Serializable{
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+	
+	
+
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -76,7 +84,7 @@ public class Estado implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Estado other = (Estado) obj;
+		Disponible other = (Disponible) obj;
 		if (descripcion == null) {
 			if (other.descripcion != null)
 				return false;
@@ -97,17 +105,13 @@ public class Estado implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Estado [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
+		return "Disponible [id=" + id + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
 	}
-	
-
-
-	
 
 	
 
 	
 	
-
+	
 
 }

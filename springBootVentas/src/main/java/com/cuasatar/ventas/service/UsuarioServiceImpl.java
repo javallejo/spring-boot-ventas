@@ -34,7 +34,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Override
 	public Iterable<Usuario> getAllUsers() {
-		// TODO Auto-generated method stub
+
 		return usuarioRepository.findAll();
 	}
 	

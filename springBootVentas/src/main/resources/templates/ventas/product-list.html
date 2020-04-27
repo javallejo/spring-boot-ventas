@@ -1,0 +1,46 @@
+<div class="alert alert-success text-center" th:if="${successMessage}" th:text="${successMessage}">Succes message</div>
+<div class="table-responsive">
+	<table id="productList" class="table table-bordered table-hover table-striped">
+	<thead class="thead-light">
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Nombre</th>
+			<th scope="col">Precio</th>
+			<th scope="col">Cantidad</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr th:each="producto: ${productoLista}">
+			<td th:text="${producto.id}"></td>
+			<td th:text="${producto.nombre}"></td>
+			<td th:text="${producto.precio}"></td>
+			<td th:text="${producto.cantidad}"></td>
+			<td>
+				<span>
+				<a href="#" th:href="@{'/ventas/editProduct/'+ ${producto.id}}"><i class="fas fa-edit"></i></a>
+					
+					|	<a href="#" th:onclick="'javascript:confirmDeleteProduct(\''+ ${producto.id} +'\');'"><i class="fas fa-times"></i></a>
+					</span>
+			</td>
+	</tr>
+	</tbody>
+	</table>
+	
+	<div id="deleteProductError" th:if="${deleteProductError}" class="alert alert-danger text-center" role="alert">
+		<span th:text="${deleteProductError}"></span>
+	</div>
+	
+		<script type="text/javascript">
+		function confirmDeleteProduct(id){
+			$('#deleteProductModal').modal('show');
+			$("#productIdHiddenInput").val(id);
+		}
+		
+		function deleteProduct(){
+			var id = $("#productIdHiddenInput").val();
+		    window.location = "/ventas/deleteProduct/"+id;
+		}
+
+</script>
+</div>

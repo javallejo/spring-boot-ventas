@@ -2,8 +2,12 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
 
-                    <li class="nav-item">
-                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=Producto&accion=Listar">Producto</a>
+                    <li class="dropdown">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown">Producto<span class="caret"></span></a>
+                    	<ul class="dropdown-menu">
+                    		 <li><a style="margin-left: 10px; border: none" th:href="@{/ventas/productForm}">Crear producto</a></li>
+          					 <li><a style="margin-left: 10px; border: none" th:href="@{/ventas/productList}">Lista productos</a></li>    				
+                    	</ul>
                     </li>
                     <li  class="dropdown">
                         <a style="margin-left: 10px; border: none" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown">Clientes<span class="caret"></span></a>

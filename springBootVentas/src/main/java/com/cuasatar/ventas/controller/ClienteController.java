@@ -47,6 +47,7 @@ public class ClienteController {
 				clienteService.createClient(client);
 				model.addAttribute("clienteFormulario", new Cliente());
 				model.addAttribute("successClientMessage","Cliente creado correctamente");
+				model.addAttribute("estado",estadosRepository.findAll());
 				
 			}
 			catch (Exception e) {
