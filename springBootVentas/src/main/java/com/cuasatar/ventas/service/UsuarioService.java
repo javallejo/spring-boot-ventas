@@ -20,6 +20,8 @@ public interface UsuarioService {
 	public Iterable<Usuario> getUserListById(Iterable<Long> id);
 
 	public List<UsuarioRolesDTO> fetchUsuarioRolesUserInnerJoin() throws Exception;
+	
+	public Long getIdUser() throws Exception;
 
 	
 }

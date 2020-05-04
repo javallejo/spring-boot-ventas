@@ -410,6 +410,19 @@ public class UsuarioController {
 		miUsuarioDatos=authenticationFacade.getLoggedUsuario();
 	}*/
 		
+	
+@GetMapping("/menu")
+	
+	public String ventas(Model model)  {
+		try {
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "ventas/ventas";
+	}
 		
 		
 

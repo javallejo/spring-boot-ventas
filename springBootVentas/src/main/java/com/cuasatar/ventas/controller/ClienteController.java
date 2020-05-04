@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cuasatar.ventas.entity.Cliente;
 import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
@@ -18,6 +19,7 @@ import com.cuasatar.ventas.repository.EstadosRepository;
 import com.cuasatar.ventas.service.ClienteService;
 
 @Controller
+@RequestMapping(path = "/clientes")
 public class ClienteController {
 	@Autowired
 	EstadosRepository estadosRepository;
@@ -26,7 +28,7 @@ public class ClienteController {
 	ClienteService clienteService;
 	
 	
-	@GetMapping("/ventas/clientForm")
+	@GetMapping("/clientForm")
 	public String clientForm(Model model){	
 		
 		model.addAttribute("clienteFormulario", new Cliente());
@@ -35,7 +37,7 @@ public class ClienteController {
 		
 	}
 	
-	@PostMapping("/ventas/clientForm")
+	@PostMapping("/clientForm")
 	public String createClient(@Valid @ModelAttribute("clienteFormulario")Cliente client, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
 			model.addAttribute("clienteFormulario",client);
@@ -62,20 +64,19 @@ public class ClienteController {
 	
 	
 	
-	@GetMapping("/ventas/clientList")
+	@GetMapping("/clientList")
 	public String clientList(Model model){	
 		
 		model.addAttribute("clienteLista",clienteService.getAllClients());
 		return "ventas/client-list-view";
 		
 	}
-	
+	/*
 	@GetMapping("/ventas")
 	
 	public String ventas(Model model)  {
 		try {
-		/*	getUserDetails();
-			model.addAttribute("usuario",miUsuarioDatos);*/
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,9 +84,10 @@ public class ClienteController {
 		
 		return "ventas/ventas";
 	}
+	*/
 	
 	
-	@GetMapping("/ventas/editClient/{id}")
+	@GetMapping("/editClient/{id}")
 	public String getEditClientForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
 		
 		try {
@@ -103,7 +105,7 @@ public class ClienteController {
 		return  "ventas/client-view";
 	}
 	
-	@PostMapping("/ventas/editClient")
+	@PostMapping("/editClient")
 	public String postEditClientForm(@Valid @ModelAttribute("clienteFormulario")Cliente client, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
 			model.addAttribute("clienteFormulario", client);
@@ -125,11 +127,11 @@ public class ClienteController {
 		}
 		
 		
-		return "redirect:/ventas/clientList";
+		return "redirect:/clientes/clientList";
 	}
 	
 	
-	@GetMapping("/ventas/deleteClient/{id}")
+	@GetMapping("/deleteClient/{id}")
 	public String deleteUser(Model model, @PathVariable(name="id") Long id) {
 		try {
 			clienteService.deleteClient(id);
@@ -137,13 +139,13 @@ public class ClienteController {
 			model.addAttribute("deleteClientError",e.getMessage());
 		}
 		/*return clientList(model);*/
-		return "redirect:/ventas/clientList";
+		return "redirect:/clientes/clientList";
 	}
 	
 	
-	@GetMapping("/ventas/clientForm/cancel")
+	@GetMapping("/clientForm/cancel")
 	public String cancelClient(ModelMap model) {
-		return "redirect:/ventas/clientForm";
+		return "redirect:/clientes/clientForm";
 	}
 	
 	

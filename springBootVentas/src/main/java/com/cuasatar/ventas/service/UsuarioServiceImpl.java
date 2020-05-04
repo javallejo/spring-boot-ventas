@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cuasatar.ventas.IAuthenticationFacade;
 import com.cuasatar.ventas.dto.ChangePasswordForm;
 import com.cuasatar.ventas.dto.UsuarioRolesDTO;
 import com.cuasatar.ventas.entity.Usuario;
@@ -30,7 +31,11 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
+	@Autowired
+    private IAuthenticationFacade authenticationFacade;
+	
 
+	Usuario miUsuario = null;
 	
 	@Override
 	public Iterable<Usuario> getAllUsers() {
@@ -191,6 +196,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 		public List<UsuarioRolesDTO> fetchUsuarioRolesUserInnerJoin() throws Exception {
 			// TODO() Auto-generated method stub
 			return usuarioRepository.fetchUsuarioRolesUserInnerJoin();
+		}
+
+		@Override
+		public Long getIdUser() throws Exception {
+			miUsuario=authenticationFacade.getLoggedUsuario();
+			return miUsuario.getId();
 		}
 		
 		

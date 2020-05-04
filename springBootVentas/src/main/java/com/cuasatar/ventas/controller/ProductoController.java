@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cuasatar.ventas.entity.Producto;
 import com.cuasatar.ventas.repository.DisponibleRepository;
 import com.cuasatar.ventas.service.ProductoService;
 
 @Controller
+@RequestMapping(path = "/producto")
 public class ProductoController {
 	
 	
@@ -27,7 +28,7 @@ public class ProductoController {
 	@Autowired
 	ProductoService productoService;
 	
-	@GetMapping("/ventas/productForm")
+	@GetMapping("/productForm")
 	public String productForm(Model model){	
 		
 		model.addAttribute("productoFormulario", new Producto());
@@ -36,7 +37,7 @@ public class ProductoController {
 		
 	}
 	
-	@PostMapping("/ventas/productForm")
+	@PostMapping("/productForm")
 	public String createClient(@Valid @ModelAttribute("productoFormulario")Producto product, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
 			model.addAttribute("productoFormulario",product);
@@ -60,7 +61,7 @@ public class ProductoController {
 		return "ventas/product-view";
 	}
 	
-	@GetMapping("/ventas/productList")
+	@GetMapping("/productList")
 	public String productList(Model model){	
 		
 		model.addAttribute("productoLista",productoService.getAllProducts());
@@ -68,7 +69,7 @@ public class ProductoController {
 		
 	}
 	
-	@GetMapping("/ventas/editProduct/{id}")
+	@GetMapping("/editProduct/{id}")
 	public String getEditClientForm(Model model, @PathVariable(name ="id")Long id)throws Exception{
 		
 		try {
@@ -86,7 +87,7 @@ public class ProductoController {
 		return  "ventas/product-view";
 	}
 	
-	@PostMapping("/ventas/editProduct")
+	@PostMapping("/editProduct")
 	public String postEditClientForm(@Valid @ModelAttribute("productoFormulario")Producto product, BindingResult result, ModelMap model) {
 		if(result.hasErrors()) {
 			model.addAttribute("productoFormulario", product);
@@ -108,10 +109,10 @@ public class ProductoController {
 		}
 		
 		
-		return "redirect:/ventas/productList";
+		return "redirect:/producto/productList";
 	}
 	
-	@GetMapping("/ventas/deleteProduct/{id}")
+	@GetMapping("/deleteProduct/{id}")
 	public String deleteproduct(Model model, @PathVariable(name="id") Long id) {
 		try {
 			productoService.deleteProduct(id);
@@ -119,13 +120,13 @@ public class ProductoController {
 			model.addAttribute("deleteProductError",e.getMessage());
 		}
 		/*return clientList(model);*/
-		return "redirect:/ventas/productList";
+		return "redirect:/producto/productList";
 	}
 	
 	
-	@GetMapping("/ventas/productForm/cancel")
+	@GetMapping("/productForm/cancel")
 	public String cancelProduct(ModelMap model) {
-		return "redirect:/ventas/productForm";
+		return "redirect:/producto/productForm";
 	}
 	
 }

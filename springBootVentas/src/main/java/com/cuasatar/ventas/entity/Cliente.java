@@ -51,6 +51,54 @@ public class Cliente implements Serializable{
     			joinColumns={@JoinColumn(name="cliente_id")}, 
     			inverseJoinColumns={@JoinColumn(name="estado_id")})
 	private Set<Estado> estado;
+	
+	
+	
+	
+
+	public Cliente() {
+		super();
+	}
+	
+	
+
+	
+
+
+
+	public Cliente(
+			@Pattern(regexp = "[0-9]+", message = "El dni solo debe llevar numeros") @Size(min = 8, max = 8, message = "El dni debe contener solo 8 digitos") @NotBlank String dni,
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ ]+", message = "El nombre solo puede contener letras en español") @NotBlank String nombres,
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9# ]+", message = "Escriba una direccion valida") @NotBlank String direccion) {
+		super();
+		this.dni = dni;
+		this.nombres = nombres;
+		this.direccion = direccion;
+	}
+
+	
+
+
+
+
+
+
+	public Cliente(Long id,
+			@Pattern(regexp = "[0-9]+", message = "El dni solo debe llevar numeros") @Size(min = 8, max = 8, message = "El dni debe contener solo 8 digitos") @NotBlank String dni,
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ ]+", message = "El nombre solo puede contener letras en español") @NotBlank String nombres,
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9# ]+", message = "Escriba una direccion valida") @NotBlank String direccion) {
+		super();
+		this.id = id;
+		this.dni = dni;
+		this.nombres = nombres;
+		this.direccion = direccion;
+	}
+
+
+
+
+
+
 
 	public Long getId() {
 		return id;

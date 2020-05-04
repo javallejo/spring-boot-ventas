@@ -41,10 +41,51 @@ public class Producto  implements Serializable{
 	@Column
 	@Min(1)
     int cantidad;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name="disponible_id",referencedColumnName="id",nullable=false)
 	private Disponible disponible;
     
+    
+    
+    
+    
+    
+    
+	public Producto(Long id,
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 ]+", message = "El nombre solo puede contener letras en español y numeros") @NotBlank String nombre,
+			@Min(1) double precio, @Min(1) int cantidad) {
+		this.id = id;
+		this.nombre = nombre;
+		this.precio = precio;
+		this.cantidad = cantidad;
+
+	}
+	
+	
+	
+	public Producto(
+			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 ]+", message = "El nombre solo puede contener letras en español y numeros") @NotBlank String nombre,
+			@Min(1) double precio, @Min(1) int cantidad) {
+		this.nombre = nombre;
+		this.precio = precio;
+		this.cantidad = cantidad;
+	}
+
+	
+	
+	
+
+
+	public Producto() {
+
+	}
+	
+	 public boolean sinExistencia() {
+	        return this.cantidad <= 0;
+	    }
+
+
+
 	public Long getId() {
 		return id;
 	}

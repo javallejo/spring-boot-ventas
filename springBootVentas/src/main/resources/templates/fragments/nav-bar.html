@@ -5,19 +5,23 @@
                     <li class="dropdown">
                         <a style="margin-left: 10px; border: none" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown">Producto<span class="caret"></span></a>
                     	<ul class="dropdown-menu">
-                    		 <li><a style="margin-left: 10px; border: none" th:href="@{/ventas/productForm}">Crear producto</a></li>
-          					 <li><a style="margin-left: 10px; border: none" th:href="@{/ventas/productList}">Lista productos</a></li>    				
+                    		 <li><a style="margin-left: 10px; border: none" th:href="@{/producto/productForm}">Crear producto</a></li>
+          					 <li><a style="margin-left: 10px; border: none" th:href="@{/producto/productList}">Lista productos</a></li>    				
                     	</ul>
                     </li>
                     <li  class="dropdown">
                         <a style="margin-left: 10px; border: none" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown">Clientes<span class="caret"></span></a>
                     	<ul class="dropdown-menu">
-                    	    <li><a style="margin-left: 10px; border: none" th:href="@{/ventas/clientForm}">Crear cliente</a></li>
-          					<li><a style="margin-left: 10px; border: none" th:href="@{/ventas/clientList}">Lista clientes</a></li>
+                    	    <li><a style="margin-left: 10px; border: none" th:href="@{/clientes/clientForm}">Crear cliente</a></li>
+          					<li><a style="margin-left: 10px; border: none" th:href="@{/clientes/clientList}">Lista clientes</a></li>
         				</ul>
                     </li>
-                    <li class="nav-item">
-                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=NuevaVenta&accion=default">Nueva Venta</a>
+                    <li class="dropdown">
+                        <a style="margin-left: 10px; border: none" class="btn btn-outline-light dropdown-toggle" data-toggle="dropdown">Ventas<span class="caret"></span></a>
+                    	<ul class="dropdown-menu">
+                    		<li><a style="margin-left: 10px; border: none" th:href="@{/ventas/}">Crear venta</a></li>
+          				
+                    	</ul>
                     </li>
 
                 </ul>                

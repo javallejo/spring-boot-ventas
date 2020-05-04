@@ -1,8 +1,11 @@
 package com.cuasatar.ventas.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cuasatar.ventas.dto.ProductoDisponibleDTO;
 import com.cuasatar.ventas.entity.Producto;
 import com.cuasatar.ventas.repository.ProductoRepository;
 
@@ -34,8 +37,7 @@ public class ProductoServiceImpl implements ProductoService{
 
 	@Override
 	public Producto updateProduct(Producto product) throws Exception {
-		Producto ToProduct = getProductById(product.getId());
-		return productoRepository.save(ToProduct);
+		return productoRepository.save(product);
 	}
 
 	@Override
@@ -45,4 +47,17 @@ public class ProductoServiceImpl implements ProductoService{
 		
 	}
 
+	@Override
+	public List<ProductoDisponibleDTO> fetchProductoDisponibleActiveList() throws Exception {
+
+		return productoRepository.fetchProductoDisponibleActiveList();
+	}
+
+	@Override
+	public Iterable<Producto> getProductListById(Iterable<Long> id) {
+
+		return productoRepository.findAllById(id);
+	}
+	
+	
 }

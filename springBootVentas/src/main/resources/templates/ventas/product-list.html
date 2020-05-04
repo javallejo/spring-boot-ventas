@@ -18,7 +18,7 @@
 			<td th:text="${producto.cantidad}"></td>
 			<td>
 				<span>
-				<a href="#" th:href="@{'/ventas/editProduct/'+ ${producto.id}}"><i class="fas fa-edit"></i></a>
+				<a href="#" th:href="@{'/producto/editProduct/'+ ${producto.id}}"><i class="fas fa-edit"></i></a>
 					
 					|	<a href="#" th:onclick="'javascript:confirmDeleteProduct(\''+ ${producto.id} +'\');'"><i class="fas fa-times"></i></a>
 					</span>
@@ -39,7 +39,7 @@
 		
 		function deleteProduct(){
 			var id = $("#productIdHiddenInput").val();
-		    window.location = "/ventas/deleteProduct/"+id;
+		    window.location = "/producto/deleteProduct/"+id;
 		}
 
 </script>

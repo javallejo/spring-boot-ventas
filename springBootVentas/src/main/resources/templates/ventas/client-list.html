@@ -18,7 +18,7 @@
 			<td th:text="${cliente.direccion}"></td>
 			<td>
 				<span>
-				<a href="#" th:href="@{'/ventas/editClient/'+ ${cliente.id}}"><i class="fas fa-edit"></i></a>
+				<a href="#" th:href="@{'/clientes/editClient/'+ ${cliente.id}}"><i class="fas fa-edit"></i></a>
 					
 					|	<a href="#" th:onclick="'javascript:confirmDeleteClient(\''+ ${cliente.id} +'\');'"><i class="fas fa-user-times"></i></a>
 					</span>
@@ -39,7 +39,7 @@
 		
 		function deleteClient(){
 			var id = $("#clientIdHiddenInput").val();
-		    window.location = "/ventas/deleteClient/"+id;
+		    window.location = "/clientes/deleteClient/"+id;
 		}
 
 </script>

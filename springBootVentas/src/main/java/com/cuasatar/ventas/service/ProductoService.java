@@ -1,9 +1,11 @@
 package com.cuasatar.ventas.service;
 
-import com.cuasatar.ventas.dto.ChangePasswordForm;
+import java.util.List;
+
+
+import com.cuasatar.ventas.dto.ProductoDisponibleDTO;
 import com.cuasatar.ventas.entity.Producto;
-import com.cuasatar.ventas.entity.Usuario;
-import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
+
 
 public interface ProductoService {
 	public Iterable<Producto> getAllProducts();
@@ -11,5 +13,12 @@ public interface ProductoService {
 	public Producto getProductById(Long id) throws Exception;
 	public Producto updateProduct(Producto product) throws Exception;
 	public void deleteProduct(Long id) throws Exception;
+	
+	
+	public Iterable<Producto> getProductListById(Iterable<Long> id);
+	
+	public List<ProductoDisponibleDTO> fetchProductoDisponibleActiveList() throws Exception;
+	
+
 
 }
