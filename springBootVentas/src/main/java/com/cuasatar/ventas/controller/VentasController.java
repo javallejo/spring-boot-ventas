@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +31,13 @@ import com.cuasatar.ventas.dto.ProductoParaVenderDTO;
 import com.cuasatar.ventas.dto.UsuarioRolesDTO;
 import com.cuasatar.ventas.dto.VentasDTO;
 import com.cuasatar.ventas.entity.Cliente;
+import com.cuasatar.ventas.entity.DetalleVentas;
 import com.cuasatar.ventas.entity.Producto;
+import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.entity.Ventas;
 import com.cuasatar.ventas.repository.ClientesRepository;
+import com.cuasatar.ventas.repository.DetalleVentasRepository;
+import com.cuasatar.ventas.repository.ProductoRepository;
 import com.cuasatar.ventas.service.ClienteService;
 import com.cuasatar.ventas.service.ProductoService;
 import com.cuasatar.ventas.service.UsuarioService;
@@ -69,9 +74,14 @@ public class VentasController {
     
     
     /*items de ventas*/
-    Long id_usuario=(long) 0;
+    Usuario miUsuario=null;
     Long id_cliente=(long) 0;
+    Cliente miCliente=null;
+    String numSerie="";
     Date fecha=new Date();
+    int nprovendidos=0;
+   /* Set<EstadoVenta> estadoventa=null;
+    EstadoVenta eventa=null;*/
 	
 	
 	@Autowired
@@ -83,10 +93,18 @@ public class VentasController {
 	@Autowired 
 	ProductoService productoService;
 	
+	@Autowired 
+	ProductoRepository productoRepository;
+	
 	@Autowired
 	VentasService ventasService;
 	@Autowired
 	UsuarioService usuarioService;
+	
+
+	
+	@Autowired
+	DetalleVentasRepository detalleventasRepository;
 	
 
 	
@@ -136,12 +154,12 @@ public class VentasController {
 	@GetMapping(value = "/")
     public String interfaceVentas(Model model, HttpServletRequest request) throws Exception {
 		
-		ObtenerClientesActivos();
+		//ObtenerClientesActivos();
 		numeroserieActual=obtenerNumeroSerieActual(numeroserieActual,ventasService);
 		model.addAttribute("numeroserie", numeroserieActual);
         model.addAttribute("producto", new Producto());
         model.addAttribute("cliente", new ClienteParaVender());
-        model.addAttribute("clienteList", clienteService.getClientListById(idClienteActiveIt));
+        //model.addAttribute("clienteList", clienteService.getClientListById(idClienteActiveIt));
         Double total =  0.0;
         ArrayList<ProductoParaVenderDTO> carrito = this.obtenerCarrito(request);
         ArrayList<Cliente> clientecarrito = this.obtenerClienteCarrito(request);
@@ -243,14 +261,21 @@ public class VentasController {
 	
 	
 	private String obtenerNumeroSerieActual(String numeroserieActual,VentasService ventasService) throws Exception {
-		numeroserieActual=ventasService.fetchNumeroSerieVentas();		
-		if (numeroserieActual == null) {
+		
+		
+		VentasDTO vdto=new VentasDTO();
+		vdto=ventasService.fetchNumeroSerieVentas();
+		numeroserieActual=vdto.getNumeroserie();
+		
+		/*System.out.println("mi numero serie actual->"+numeroserieActual);*/
+		if (numeroserieActual == null || numeroserieActual.isEmpty() || numeroserieActual.length()==0 ) {
 			numeroserieActual = "000000001";     
         } else {
             int incrementar = Integer.parseInt(numeroserieActual);
             GenerarSerie gs = new GenerarSerie();
             numeroserieActual = gs.NumeroSerie(incrementar);         
-        }		
+        }	
+		
 		return numeroserieActual;
 	}
 	
@@ -271,35 +296,64 @@ public class VentasController {
         	id_cliente=clienteParaVender.getId();
         }
         
-        id_usuario=usuarioService.getIdUser();
-        /*Ventas v = ventasRepository.save(new Ventas());*/
+        miCliente=clienteService.getClientById(id_cliente);
+        
+        Double total =  0.0;
+        for (ProductoParaVenderDTO p: carrito) total += p.getTotal();
+        
+        miUsuario=usuarioService.getUserLog();
+        numeroserieActual=obtenerNumeroSerieActual(numeroserieActual,ventasService);
         
         /*
+        eventa=estadoventasService.getEstadoVentasById((long) 1);
+        estadoventa.add(eventa);
+        */
+
+        
+        Ventas v = ventasService.createSales(new Ventas(miCliente,miUsuario,numeroserieActual,fecha,total));
+        
+        /**/
+        
+        
         // Recorrer el carrito
         for (ProductoParaVenderDTO productoParaVender : carrito) {
             // Obtener el producto fresco desde la base de datos
-            Producto p = productosRepository.findById(productoParaVender.getId()).orElse(null);
+            Producto p = productoRepository.findById(productoParaVender.getId()).orElse(null);
             if (p == null) continue; // Si es nulo o no existe, ignoramos el siguiente código con continue
             // Le restamos existencia
-            p.restarExistencia(productoParaVender.getCantidad());
-            // Lo guardamos con la existencia ya restada
-            productosRepository.save(p);
-            // Creamos un nuevo producto que será el que se guarda junto con la venta
-            ProductoVendido productoVendido = new ProductoVendido(productoParaVender.getCantidad(), productoParaVender.getPrecio(), productoParaVender.getNombre(), productoParaVender.getCodigo(), v);
-            // Y lo guardamos
-            productosVendidosRepository.save(productoVendido);
-        }
-        
-        */
+            nprovendidos=(int) (productoParaVender.getTotal()/productoParaVender.getPrecio());
 
+            p.setCantidad(NuevoStockProducto(p,nprovendidos));
+            // Lo guardamos con la existencia ya restada
+            productoRepository.save(p);
+            
+            
+            
+            
+            // Creamos un nuevo producto que será el que se guarda junto con la venta
+            DetalleVentas detalleVentas= new DetalleVentas(v, p, productoParaVender.getCantidadProducto().intValue(),productoParaVender.getTotal());
+            // Y lo guardamos
+            detalleventasRepository.save(detalleVentas);
+            
+        }             
+       
         // Al final limpiamos el carrito
         this.limpiarCarrito(request);
+        this.limpiarClienteCarrito(request);
         // e indicamos una venta exitosa
         redirectAttrs
                 .addFlashAttribute("mensaje", "Venta realizada correctamente")
                 .addFlashAttribute("clase", "success");
         return "redirect:/ventas/";
+        
+        
+       
     }
+	
+	public int NuevoStockProducto(Producto p,int nproductosvendidos) {
+		int nuevoStock=p.getCantidad()-nproductosvendidos;			
+		return nuevoStock;
+	}
 	 
 
 	

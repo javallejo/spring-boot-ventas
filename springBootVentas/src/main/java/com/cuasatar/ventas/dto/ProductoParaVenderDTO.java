@@ -32,7 +32,7 @@ public class ProductoParaVenderDTO extends Producto{
 
 	public ProductoParaVenderDTO(Long id,
 			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 ]+", message = "El nombre solo puede contener letras en español y numeros") @NotBlank String nombre,
-			@Min(1) double precio, @Min(1) int cantidad,Double cantidadProducto) {
+			@Min(1) double precio, @Min(0) int cantidad,Double cantidadProducto) {
 		super(id, nombre, precio, cantidad);
 		this.cantidadProducto = cantidadProducto;
 		// TODO Auto-generated constructor stub
@@ -45,7 +45,7 @@ public class ProductoParaVenderDTO extends Producto{
 
 	public ProductoParaVenderDTO(
 			@Pattern(regexp = "[A-Za-zñÑáéíóúÁÉÍÓÚ0-9 ]+", message = "El nombre solo puede contener letras en español y numeros") @NotBlank String nombre,
-			@Min(1) double precio, @Min(1) int cantidad,Double cantidadProducto) {
+			@Min(1) double precio, @Min(0) int cantidad,Double cantidadProducto) {
 		super(nombre, precio, cantidad);
 		this.cantidadProducto = cantidadProducto;
 		// TODO Auto-generated constructor stub

@@ -282,6 +282,7 @@ public class UsuarioController {
 				model.addAttribute("passwordForm",new ChangePasswordForm(user.getId()));
 			}else {
 				try {
+					System.out.println("mi rol->"+user.getRoles());
 					usuarioService.updateUser(user);
 					model.addAttribute("usuarioFormulario", new Usuario());
 					model.addAttribute("successMessage","Usuario actualizado correctamente");

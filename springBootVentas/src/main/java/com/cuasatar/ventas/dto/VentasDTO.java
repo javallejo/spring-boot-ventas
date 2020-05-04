@@ -36,30 +36,17 @@ public class VentasDTO {
 
 
 
-	public VentasDTO(Long id, Integer item, Long idcliente, Long idempleado, Long idproducto, String numeroserie,
-			String descripcionproducto, Double precio, Integer cantidad, Double subtotal, Double monto, String estado,
-			Iterable<Cliente> clienteList, Iterable<Producto> productoList) {
+	
+
+	
+	
+
+
+	public VentasDTO(Long id) {
 		super();
 		this.id = id;
-		this.item = item;
-		this.idcliente = idcliente;
-		this.idempleado = idempleado;
-		this.idproducto = idproducto;
-		this.numeroserie = numeroserie;
-		this.descripcionproducto = descripcionproducto;
-		this.precio = precio;
-		this.cantidad = cantidad;
-		this.subtotal = subtotal;
-		this.monto = monto;
-		this.estado = estado;
-		this.clienteList = clienteList;
-		this.productoList = productoList;
 	}
 
-	public VentasDTO(String numeroserie) {
-		this.numeroserie = numeroserie;
-	}
-	
 	public VentasDTO() {
 		
 	}
@@ -102,6 +89,14 @@ public class VentasDTO {
 
 	public void setIdproducto(Long idproducto) {
 		this.idproducto = idproducto;
+	}
+
+
+
+	
+	public VentasDTO(String numeroserie) {
+		super();
+		this.numeroserie = numeroserie;
 	}
 
 	public String getNumeroserie() {

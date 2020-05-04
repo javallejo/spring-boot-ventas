@@ -199,9 +199,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		}
 
 		@Override
-		public Long getIdUser() throws Exception {
+		public Usuario getUserLog() throws Exception {
 			miUsuario=authenticationFacade.getLoggedUsuario();
-			return miUsuario.getId();
+			return miUsuario;
 		}
 		
 		

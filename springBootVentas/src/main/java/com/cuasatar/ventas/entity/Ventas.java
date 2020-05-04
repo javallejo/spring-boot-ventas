@@ -45,11 +45,49 @@ public class Ventas implements Serializable {
 	private Date fechaventas;
 	@Column
 	private Double monto;
+	/*
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ventas_estadoventa",
 			joinColumns=@JoinColumn(name="ventas_id"),
 			inverseJoinColumns=@JoinColumn(name="estadoventas_id"))
 	private Set<EstadoVenta> estadoventa;
+	*/
+	
+	public Ventas() {
+		super();
+	}
+	
+	
+	
+
+
+	public Ventas(Cliente cliente, Usuario usuario, String numeroserie, Date fechaventas, Double monto) {
+		super();
+		this.cliente = cliente;
+		this.usuario = usuario;
+		this.numeroserie = numeroserie;
+		this.fechaventas = fechaventas;
+		this.monto = monto;
+	}
+
+
+
+
+
+	public Ventas(Long id, Cliente cliente, Usuario usuario, String numeroserie, Date fechaventas, Double monto) {
+		super();
+		this.id = id;
+		this.cliente = cliente;
+		this.usuario = usuario;
+		this.numeroserie = numeroserie;
+		this.fechaventas = fechaventas;
+		this.monto = monto;
+	}
+
+
+
+
+
 	public Long getId() {
 		return id;
 	}
@@ -86,21 +124,19 @@ public class Ventas implements Serializable {
 	public void setMonto(Double monto) {
 		this.monto = monto;
 	}
-	public Set<EstadoVenta> getEstadoventa() {
-		return estadoventa;
-	}
-	public void setEstadoventa(Set<EstadoVenta> estadoventa) {
-		this.estadoventa = estadoventa;
-	}
+
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((estadoventa == null) ? 0 : estadoventa.hashCode());
 		result = prime * result + ((fechaventas == null) ? 0 : fechaventas.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((monto == null) ? 0 : monto.hashCode());
@@ -108,6 +144,11 @@ public class Ventas implements Serializable {
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
+
+
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -121,11 +162,6 @@ public class Ventas implements Serializable {
 			if (other.cliente != null)
 				return false;
 		} else if (!cliente.equals(other.cliente))
-			return false;
-		if (estadoventa == null) {
-			if (other.estadoventa != null)
-				return false;
-		} else if (!estadoventa.equals(other.estadoventa))
 			return false;
 		if (fechaventas == null) {
 			if (other.fechaventas != null)
@@ -154,11 +190,22 @@ public class Ventas implements Serializable {
 			return false;
 		return true;
 	}
+
+
+
+
+
 	@Override
 	public String toString() {
 		return "Ventas [id=" + id + ", cliente=" + cliente + ", usuario=" + usuario + ", numeroserie=" + numeroserie
-				+ ", fechaventas=" + fechaventas + ", monto=" + monto + ", estadoventa=" + estadoventa + "]";
+				+ ", fechaventas=" + fechaventas + ", monto=" + monto + "]";
 	}
+
+
+
+
+
+
 
 	
 	

@@ -6,5 +6,5 @@ import com.cuasatar.ventas.entity.Estado;
 
 
 public interface EstadosRepository extends CrudRepository<Estado, Long> {
-
+  
 }

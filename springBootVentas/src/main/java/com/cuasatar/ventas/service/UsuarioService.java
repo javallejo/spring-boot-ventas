@@ -21,7 +21,7 @@ public interface UsuarioService {
 
 	public List<UsuarioRolesDTO> fetchUsuarioRolesUserInnerJoin() throws Exception;
 	
-	public Long getIdUser() throws Exception;
+	public Usuario getUserLog() throws Exception;
 
 	
 }

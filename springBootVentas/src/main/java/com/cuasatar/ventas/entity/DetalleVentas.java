@@ -34,6 +34,36 @@ public class DetalleVentas implements Serializable {
 	private int cantidad;
 	@Column
 	private double precioventa;
+	
+	
+	
+	
+	public DetalleVentas() {
+		super();
+	}
+	
+	
+	public DetalleVentas(Long id, Ventas ventas, Producto producto, int cantidad, double precioventa) {
+		super();
+		this.id = id;
+		this.ventas = ventas;
+		this.producto = producto;
+		this.cantidad = cantidad;
+		this.precioventa = precioventa;
+	}
+	
+	
+
+
+	public DetalleVentas(Ventas ventas, Producto producto, int cantidad, double precioventa) {
+		super();
+		this.ventas = ventas;
+		this.producto = producto;
+		this.cantidad = cantidad;
+		this.precioventa = precioventa;
+	}
+
+
 	public Long getId() {
 		return id;
 	}

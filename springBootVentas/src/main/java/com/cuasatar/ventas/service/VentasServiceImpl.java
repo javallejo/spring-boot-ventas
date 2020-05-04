@@ -3,7 +3,7 @@ package com.cuasatar.ventas.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.cuasatar.ventas.dto.VentasDTO;
 import com.cuasatar.ventas.entity.Producto;
 import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.entity.Ventas;
@@ -20,15 +20,18 @@ public class VentasServiceImpl implements VentasService {
 	
 	@Override
 	public String GenerarSerie() throws Exception {
+		
+		VentasDTO vdto=new VentasDTO();
+		vdto=fetchNumeroSerieVentas();
 		String numeroserie="";
 		
-		numeroserie=fetchNumeroSerieVentas();
+		numeroserie=vdto.getNumeroserie();
 
         return numeroserie;
 	}
 
 	@Override
-	public String fetchNumeroSerieVentas() throws Exception {
+	public VentasDTO fetchNumeroSerieVentas() throws Exception {
 
 		return ventasRepository.fetchNumeroSerieVentas();
 	}
