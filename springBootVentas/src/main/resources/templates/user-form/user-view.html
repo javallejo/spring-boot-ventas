@@ -1,8 +1,9 @@
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<title>Información de usuario y formulario</title>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head xmlns:th="http://www.w3.org/1999/xhtml">
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>InformaciÃ³n de usuario y formulario</title>
 
 	<!--JQUERY-->
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
@@ -38,10 +39,10 @@
 	        	
 	        	    
 	        		"language": { /*opciones de idioma*/
-		                "processing":"Obteniendo información", 
-		                "lengthMenu": "Mostrando _MENU_ registros por página",
-		                "zeroRecords": "No se ha encontrado información",
-		                "info": " Mostrando página _PAGE_ de _PAGES_",
+		                "processing":"Obteniendo informaciÃ³n", 
+		                "lengthMenu": "Mostrando _MENU_ registros por pÃ¡gina",
+		                "zeroRecords": "No se ha encontrado informaciÃ³n",
+		                "info": " Mostrando pÃ¡gina _PAGE_ de _PAGES_",
 		                "infoEmpty": "Registros no disponibles",
 		                "infoFiltered": "(filtrado de _MAX_ total de registros)",
 		                search: "Buscar",
@@ -49,7 +50,7 @@
 		                    "previous": "Anterior",
 		                    "next":"Siguiente",
 		                    "first":"Primero",
-		                    "last":"Último"
+		                    "last":"Ãšltimo"
 		          }	        
 		        }
 	        });
@@ -58,6 +59,8 @@
 </head>
 <body>
 	<div class="container">
+	 <div th:replace="fragments/nav-bar :: nav-bar">...</div>
+		
 	<div class="mx-auto col-sm-8 main-section" id="myTab" role="tablist">
 		<ul class="nav nav-tabs justify-content-end">
 			<li class="nav-item">
@@ -67,12 +70,12 @@
 			<a class="nav-link" th:classappend=" ${formTab}" id="form-tab" data-toggle="tab" href="#form" role="tab" aria-controls="form" aria-selected="true">Formulario</a>				   	
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" th:classappend=" ${formClientTab}" id="form-client-tab" data-toggle="tab" href="#formClient" role="tab" aria-controls="form" aria-selected="true">Ventas</a>				   	
+				<a class="nav-link d-none" th:classappend=" ${formClientTab}" id="form-client-tab" data-toggle="tab" href="#formClient" role="tab" aria-controls="form" aria-selected="true">Ventas</a>				   	
 			</li>
 			
 			
 			<li class="nav-item">
-				<a class="nav-link" href="#" th:href="@{/logout}"><span></span><span class="float-right"><i class="fas fa-sign-out-alt"></i></span></a>				   	
+				<a class="nav-link d-none" href="#" th:href="@{/logout}"><span></span><span class="float-right"><i class="fas fa-sign-out-alt"></i></span></a>				   	
 			</li>
 
 		</ul>
@@ -90,7 +93,7 @@
 			<div class="tab-pane fade show" th:classappend=" ${formTab}" id="form" role="tabpanel" aria-labelledby="form-tab">
 				<div class="card">
 					<div class="card-header">
-						<h4>Información de usuario</h4>
+						<h4>InformaciÃ³n de usuario</h4>
 					</div>
 					<div class="card-body">
 						<div th:include="user-form/user-form.html" th:remove="tag"></div>
@@ -100,7 +103,7 @@
 			<div class="tab-pane fade show" th:classappend=" ${formClientTab}" id="formClient" role="tabpanel" aria-labelledby="form-client-tab">
 				<div class="card">
 					<div class="card-header">
-						<h4>Información de cliente</h4>
+						<h4>InformaciÃ³n de cliente</h4>
 					</div>
 					<div class="card-body">
 						<div th:include="user-form/sales.html" th:remove="tag"></div>
@@ -110,6 +113,7 @@
 			
 		</div>
 	</div>
+	
 </div>
 <div th:if="${editMode}" th:include="user-form/change-password.html" th:remove="tag"></div>
 <div th:include="user-form/confirm-delete-modal.html" th:remove="tag"></div>

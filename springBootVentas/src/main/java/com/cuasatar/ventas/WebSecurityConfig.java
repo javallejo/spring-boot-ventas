@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.cuasatar.ventas.service.UsuarioDetallesServiceImpl;
 
@@ -21,6 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
   String[] resources = new String[]{
           "/include/**","/css/**","/icons/**","/img/**","/js/**","/layer/**"
   };
+  
+  
+
   
   @Override
   protected void configure(HttpSecurity http) throws Exception {

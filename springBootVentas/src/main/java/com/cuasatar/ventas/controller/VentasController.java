@@ -182,6 +182,7 @@ public class VentasController {
         	clientecarrito = new ArrayList<>();
         }
         return clientecarrito;
+
     }
 	
 	@PostMapping(value = "/cliente/agregar")
@@ -227,6 +228,8 @@ public class VentasController {
     public String agregarAlCarrito(@ModelAttribute Producto producto, HttpServletRequest request, RedirectAttributes redirectAttrs) throws Exception {
         ArrayList<ProductoParaVenderDTO> carrito = this.obtenerCarrito(request);
         Producto productoBuscadoPorCodigo = productoService.getProductById(producto.getId());
+        
+
         if (productoBuscadoPorCodigo == null) {
             redirectAttrs
                     .addFlashAttribute("mensaje", "El producto con el código " + producto.getId() + " no existe")
@@ -243,14 +246,25 @@ public class VentasController {
         boolean encontrado = false;
         for (ProductoParaVenderDTO productoParaVenderActual : carrito) {
             if (productoParaVenderActual.getId().equals(productoBuscadoPorCodigo.getId())) {
-                productoParaVenderActual.aumentarCantidadProducto();
-                encontrado = true;
-                break;
+            	
+            	if(!CompararStockConCompra(productoBuscadoPorCodigo.getCantidad(), productoParaVenderActual.getCantidadProducto())) {
+            		productoParaVenderActual.aumentarCantidadProducto();
+                    encontrado = true;
+                    break;
+            	}
+            	else {
+            		redirectAttrs
+                    .addFlashAttribute("mensaje", "El producto con el código " + producto.getId() + " no cuenta con más existencias en almacén")
+                    .addFlashAttribute("clase", "warning");
+            		return "redirect:/ventas/";
+            	}
+                
             }
         }
         if (!encontrado) {
             carrito.add(new ProductoParaVenderDTO(productoBuscadoPorCodigo.getId(),productoBuscadoPorCodigo.getNombre(), productoBuscadoPorCodigo.getPrecio(), productoBuscadoPorCodigo.getCantidad(), (double) 1));
         }
+        
         this.guardarCarrito(carrito, request);
         return "redirect:/ventas/";
     }
@@ -285,10 +299,16 @@ public class VentasController {
         ArrayList<Cliente> cliente=this.obtenerClienteCarrito(request);/*Obtener cliente*/
         // Si no hay carrito o está vacío, regresamos inmediatamente
         if (carrito == null || carrito.size() <= 0) {
+        	redirectAttrs
+            .addFlashAttribute("mensaje", "Introduzca objetos al carrito de ventas")
+            .addFlashAttribute("clase", "warning");
             return "redirect:/ventas/";
         }
         
         if (cliente == null || cliente.size() <= 0) {
+        	redirectAttrs
+            .addFlashAttribute("mensaje", "Introduzca un cliente a la venta")
+            .addFlashAttribute("clase", "warning");
             return "redirect:/ventas/";
         }
         
@@ -353,6 +373,18 @@ public class VentasController {
 	public int NuevoStockProducto(Producto p,int nproductosvendidos) {
 		int nuevoStock=p.getCantidad()-nproductosvendidos;			
 		return nuevoStock;
+	}
+	
+	public boolean CompararStockConCompra(int cantidadStock, Double cantidadCompra) {
+		boolean iguales=false;
+		int cantidadCompraInt=(int) Math.round(cantidadCompra);
+		if (cantidadStock-cantidadCompraInt==0) {
+			iguales= true;
+		}
+		else {
+			iguales=false;
+		}
+		return iguales;
 	}
 	 
 

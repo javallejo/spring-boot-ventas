@@ -7,6 +7,7 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,9 @@ public class UsuarioController {
 	List<Long> idUser = new ArrayList<>();
 	Iterable<Long> idUserIt=null;
 	
+	
+	Usuario miUsuarioLogin=new Usuario();
+	
 
 	
 	
@@ -81,12 +85,16 @@ public class UsuarioController {
 	public String index() {
 		return "index";
 	}
+	
+
 
 	@GetMapping("/userForm")
 	public String userForm(Model model){	
 		
 		try {
 			getIdAndRoleUserLogged();
+			
+			
 			
 			/**/
 
