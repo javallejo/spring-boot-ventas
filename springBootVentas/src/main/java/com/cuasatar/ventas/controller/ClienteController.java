@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cuasatar.ventas.entity.Cliente;
-import com.cuasatar.ventas.exception.UsernameOrIdNotFound;
 import com.cuasatar.ventas.repository.EstadosRepository;
 import com.cuasatar.ventas.service.ClienteService;
 

@@ -1,0 +1,110 @@
+<div class="table-responsive">
+	<table id="reportSalesList" class="table table-bordered table-hover table-striped">
+	<thead class="thead-light">
+		<tr>
+		    <th scope="col">Nombre Cliente</th>
+		    <th scope="col">Nombre Empleado</th>
+		    <th scope="col">Numero Serie</th>
+			<th scope="col">Fecha</th>
+			<th scope="col">Monto</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	<tr th:each="venta : ${ventas}">
+		<td th:text="${venta.cliente.nombres}"></td>
+		<td th:text="${venta.usuario.nombreusuario}"></td>
+		<td th:text="${venta.numeroserie}"></td>
+		<td th:text="${venta.fechaventas}"></td>
+    	<td th:text="${venta.monto}"></td>
+    	<td>
+    		<span>
+    			<a href="#" th:onclick="'javascript:salesDetail('+ ${venta.id} +');'"><i class="fas fa-file-alt"></i></a>
+    		</span>
+    	</td>
+	</tr>
+	</tbody>
+	</table>
+	
+	<script type="text/javascript">
+		function salesDetail(id){
+			$('#salesDetailsModal').modal('show');
+			
+			
+			$.ajax({
+		        type: "POST",
+		        url: "/ventas/detalle-venta-cliente/",
+		        data : {
+		            "id" : id
+		        },
+		        success: function (data) {
+		        	
+
+		        	$("#nombre-cliente").html(data.cliente.nombres);
+		        	$("#dni").html(data.cliente.dni);
+		        	$("#direccion").html(data.cliente.direccion);
+		        	$("#nombre-empleado").html(data.usuario.nombreusuario);
+		        	$("#numero-serie").html(data.numeroserie);
+		        	$("#fecha").html(data.fechaventas);
+		        	$("#monto").html(data.monto);
+		        	
+		        	
+		        },
+		        error: function (e) {
+		            alert("error");
+		            console.log(e);
+		        }
+		        
+			}); 
+			
+			
+			$.ajax({
+		        type: "POST",
+		        url: "/ventas/detalle-venta-descripcion/",
+		        data : {
+		            "id" : id
+		        },
+		        success: function (data) {
+		        	var table="";
+		        	console.log(data.length);
+		        	for(i=0;i<data.length;i++){
+		        		
+		        		table+="<tr>";
+		        		table+="<td>"+data[i].producto.nombre+"</td>";
+		        		table+="<td>"+data[i].producto.precio+"</td>";
+		        		table+="<td>"+data[i].cantidad+"</td>";
+		        		table+="<td>"+data[i].precioventa+"</td>";	        		
+		        	}
+		        	table+="</tr>";
+		        	
+		        	$("#results-modal").html(table);
+		        	/*console.log(data[i].producto.nombre);
+	        		console.log(data[i].producto.precio);
+	        		console.log(data[i].cantidad);
+	        		console.log(data[i].precioventa);*/
+		        	
+		        	
+		        },
+		        error: function (e) {
+		            alert("error");
+		            console.log(e);
+		        }
+		        
+			}); 
+			
+			
+		}
+		
+		
+		
+	
+			
+			
+		   
+		/*
+		function deleteProduct(){
+			var id = $("#productIdHiddenInput").val();
+		    window.location = "/producto/deleteProduct/"+id;
+		}*/
+
+</script>

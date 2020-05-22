@@ -1,9 +1,7 @@
 package com.cuasatar.ventas.service;
 
-import com.cuasatar.ventas.dto.ChangePasswordForm;
+
 import com.cuasatar.ventas.dto.VentasDTO;
-import com.cuasatar.ventas.entity.Producto;
-import com.cuasatar.ventas.entity.Usuario;
 import com.cuasatar.ventas.entity.Ventas;
 
 public interface VentasService {
@@ -12,6 +10,10 @@ public interface VentasService {
 	public VentasDTO fetchNumeroSerieVentas() throws Exception;
 	
 	public Ventas createSales(Ventas sales) throws Exception;
+	
+	public Ventas getSalesById(Long id) throws Exception;
+	
+	public Iterable<Ventas> getAllSales() throws Exception;
 	
 	
 }

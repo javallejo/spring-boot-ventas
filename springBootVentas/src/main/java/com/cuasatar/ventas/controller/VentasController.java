@@ -3,11 +3,10 @@ package com.cuasatar.ventas.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +18,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cuasatar.ventas.dto.ChangePasswordForm;
+
 import com.cuasatar.ventas.dto.ClienteParaVender;
-import com.cuasatar.ventas.dto.ClientesEstadoDTO;
+
 import com.cuasatar.ventas.dto.ProductoDisponibleDTO;
 import com.cuasatar.ventas.dto.ProductoParaVenderDTO;
-import com.cuasatar.ventas.dto.UsuarioRolesDTO;
+
 import com.cuasatar.ventas.dto.VentasDTO;
 import com.cuasatar.ventas.entity.Cliente;
 import com.cuasatar.ventas.entity.DetalleVentas;
@@ -38,7 +39,9 @@ import com.cuasatar.ventas.entity.Ventas;
 import com.cuasatar.ventas.repository.ClientesRepository;
 import com.cuasatar.ventas.repository.DetalleVentasRepository;
 import com.cuasatar.ventas.repository.ProductoRepository;
+import com.cuasatar.ventas.repository.VentasRepository;
 import com.cuasatar.ventas.service.ClienteService;
+import com.cuasatar.ventas.service.DetalleVentasService;
 import com.cuasatar.ventas.service.ProductoService;
 import com.cuasatar.ventas.service.UsuarioService;
 import com.cuasatar.ventas.service.VentasService;
@@ -105,6 +108,11 @@ public class VentasController {
 	
 	@Autowired
 	DetalleVentasRepository detalleventasRepository;
+	
+	@Autowired
+	DetalleVentasService detalleventasService;
+	
+
 	
 
 	
@@ -267,7 +275,7 @@ public class VentasController {
         
         this.guardarCarrito(carrito, request);
         return "redirect:/ventas/";
-    }
+	 }
 	
 	private void guardarCarrito(ArrayList<ProductoParaVenderDTO> carrito, HttpServletRequest request) {
         request.getSession().setAttribute("carrito", carrito);
@@ -386,7 +394,67 @@ public class VentasController {
 		}
 		return iguales;
 	}
-	 
+	
+	@GetMapping(value = "/reporte-ventas")
+    public String reporteVentas(Model model) throws Exception  {
+		model.addAttribute("ventas", ventasService.getAllSales());
+		
+		
+		
+		
+		/*System.out.println("mis ventas->"+ventasService.getAllSales().toString());*/
+		/*model.addAttribute("ventasDetalle", detalleventasService.getAllSalesDetails());
+		System.out.println("mis ventas detalle->"+detalleventasService.getAllSalesDetails().toString());*/
+		
+		return "ventas/report-sales-view";
+		
+		
+	}
+	
+
+	
+	@RequestMapping(value = "/detalle-venta-cliente")	
+	@ResponseBody
+    public Ventas ventaPorCliente(@RequestParam Long id,HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+
+    	   
+    	/*   
+    	model.addAttribute("ventasUnico", ventasService.getSalesById(id));
+   		model.addAttribute("ventasDetalle",detalleventasService.getDetailSalesById(id));
+   		model.addAttribute("modalSaleDetailMode","false");
+   		
+   		*/
+   		
+   		/*System.out.println("mis ventas->"+ventasService.getSalesById(id).toString());*/
+   		/*System.out.println("mis ventas detalle->"+detalleventasService.getDetailSalesById(id).toString());*/
+   		
+		
+		
+		return ventasService.getSalesById(id);
+      
+   		/*return "la respuesta es hola";*/
+       
+      
+       
+		
+		
+		
+		/*return model;*/
+		
+    }
+	
+	@RequestMapping(value = "/detalle-venta-descripcion")
+	@ResponseBody
+	 public Iterable<DetalleVentas> ventaPorClienteDescripcion(@RequestParam Long id,HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+       Ventas venta=ventasService.getSalesById(id);
+      
+       
+       System.out.println("mis ventas detalle->"+detalleventasService.getDetailBySales(venta).toString());
+      	
+       
+       return detalleventasService.getDetailBySales(venta);
+      
+	}
 
 	
 	

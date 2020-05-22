@@ -44,6 +44,18 @@ public class VentasServiceImpl implements VentasService {
 		return sales;
 	}
 
+	@Override
+	public Iterable<Ventas> getAllSales() throws Exception {
+		return ventasRepository.findAll();
+	}
+
+	@Override
+	public Ventas getSalesById(Long id) throws Exception {
+
+		return ventasRepository.findById(id).orElseThrow(() -> new Exception("El Id de la venta no existe."));
+
+	}
+
 	
 
 }

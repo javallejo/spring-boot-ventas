@@ -1,0 +1,59 @@
+<!-- Modal -->
+<div class="modal fade" id="salesDetailsModal" tabindex="-1" role="dialog" aria-labelledby="salesDetailsTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+        		<h5 class="modal-title" id="salesDetailsTitle">Detalle de venta</h5>
+        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+       			 </button>
+      		</div>
+      		<div class="modal-body">   
+      		
+      		<div class="container-fluid">
+	      		<hr>
+	      		<div class="row">
+	      			<div class="col-md-6"><b>Nombre cliente:</b>  <span id="nombre-cliente"></span></div>
+	      			<div class="col-md-6"><b>DNI:</b>  <span id="dni"></span></div>
+	      		</div>
+	      		<div class="row">
+	      		<div class="col-md-12"><b>Direccion:</b>  <span id="direccion"></span></div>
+	      		</div>
+	      		<hr>
+      			
+      			<div><b>Nombre empleado:</b> <span id="nombre-empleado"> </div>
+      			
+      			<hr>
+      			<div class="row">
+	      			<div class="col-md-6"><b>Numero serie:</b> <span id="numero-serie"> </div>
+      				<div class="col-md-6"><b>Fecha:</b> <span id="fecha"> </div>
+	      		</div>
+	      		<hr>
+	      		<table class="table table-bordered table-hover table-striped">
+					<thead class="thead-light">
+						<tr>
+						    <th scope="col">Producto</th>
+						    <th scope="col">Precio</th>
+						    <th scope="col">Cantidad</th>
+							<th scope="col">Subtotal</th>						
+						</tr>
+					</thead>
+					<tbody id="results-modal">
+					</tbody>
+				</table>
+	
+      			
+      			<div><b>Monto:</b> <span id="monto"> </div>
+      		</div>
+	
+      		 			
+
+                  
+                  
+      		</div>
+      		<div class="modal-footer">
+      		</div>
+		</div>
+	</div>
+
+</div>
