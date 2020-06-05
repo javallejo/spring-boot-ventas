@@ -1,5 +1,8 @@
 package com.cuasatar.ventas.controller;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
@@ -46,6 +50,10 @@ import com.cuasatar.ventas.service.ProductoService;
 import com.cuasatar.ventas.service.UsuarioService;
 import com.cuasatar.ventas.service.VentasService;
 import com.cuasatar.ventas.util.GenerarSerie;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperPrint;
 
 
 @Controller
@@ -455,6 +463,19 @@ public class VentasController {
        return detalleventasService.getDetailBySales(venta);
       
 	}
+	
+	@RequestMapping(value = "/reportePDF/{indice}")
+	public void export(ModelAndView model, HttpServletResponse response,@PathVariable Long indice) throws IOException, JRException, SQLException {
+		  JasperPrint jasperPrint = null;
+
+		  response.setContentType("application/x-download");
+		  response.setHeader("Content-Disposition", String.format("attachment; filename=\"salesreport.pdf\""));
+
+		  OutputStream out = response.getOutputStream();
+		  jasperPrint = ventasService.exportPdfFile(indice);
+		  JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+		 }
+	
 
 	
 	

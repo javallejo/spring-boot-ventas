@@ -20,6 +20,8 @@
     	<td>
     		<span>
     			<a href="#" th:onclick="'javascript:salesDetail('+ ${venta.id} +');'"><i class="fas fa-file-alt"></i></a>
+    			<a th:href="@{'/ventas/reportePDF/'+ ${venta.id}}" target="_blank"><i class="far fa-file-pdf" style="color:red"></i></a>
+    	
     		</span>
     	</td>
 	</tr>
@@ -66,16 +68,16 @@
 		        },
 		        success: function (data) {
 		        	var table="";
-		        	console.log(data.length);
-		        	for(i=0;i<data.length;i++){
-		        		
+		        	
+		        	for(i=0;i<data.length;i++){	
 		        		table+="<tr>";
 		        		table+="<td>"+data[i].producto.nombre+"</td>";
 		        		table+="<td>"+data[i].producto.precio+"</td>";
 		        		table+="<td>"+data[i].cantidad+"</td>";
-		        		table+="<td>"+data[i].precioventa+"</td>";	        		
+		        		table+="<td>"+data[i].precioventa+"</td>";	
+		        		table+="</tr>";
 		        	}
-		        	table+="</tr>";
+		        	
 		        	
 		        	$("#results-modal").html(table);
 		        	/*console.log(data[i].producto.nombre);
